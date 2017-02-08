@@ -1,4 +1,6 @@
 .git/
+x86/
+x64/
 packages.config
 WhispererTCG.vcxproj
 WhispererTCG.vcxproj.filters
