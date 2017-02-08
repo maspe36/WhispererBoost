@@ -75,7 +75,7 @@ public:
 
 	#pragma region Constructor & Destructor
 
-	Card(vector<int> Cost, string Name, string Text, ColorVariants Color, TypeVariants Type, vector<MechanicVariants> Mechanics);
+	Card(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics);
 	virtual ~Card();
 
 	#pragma endregion
