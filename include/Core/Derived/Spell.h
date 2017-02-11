@@ -1,5 +1,5 @@
 #pragma once
-#include "..\include\Card.h"
+#include "..\include\Core\Card.h"
 
 class Spell :
 	public Card

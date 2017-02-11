@@ -1,4 +1,4 @@
-#include "..\include\Card.h"
+#include "..\include\Core\Card.h"
 
 void Card::Effect()
 {
