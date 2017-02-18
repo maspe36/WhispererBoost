@@ -28,6 +28,9 @@ public:
 	// When false the player is considered dead
 	bool Alive;
 
+	// The cards in the players hand
+	vector<Card*> Hand;
+
 	// A players deck of cards
 	vector<Card*> Deck;
 
@@ -42,6 +45,9 @@ public:
 
 	// A players constants in play
 	vector<Constant*> Constants;
+
+	// The seed used to shuffle this players cards 
+	mt19937 Seed;
 
 	#pragma endregion
 
