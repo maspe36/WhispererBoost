@@ -50,14 +50,8 @@ public:
 
 	#pragma region Instance Vars
 
-	/* The mana cost to play this card (Alphabetical)
-	0: Black
-	1: Blue
-	2: Brown
-	3: Green
-	4: Red
-	5: White */
-	vector<int> Cost;
+	// The mana cost to play this card
+	int Cost;
 
 	// A cards name
 	string Name;
@@ -81,13 +75,17 @@ public:
 
 	#pragma region Virtual Methods
 
+	/* Triggers the cards effect */
 	virtual void Effect();
 
 	#pragma endregion
 
 	#pragma region Constructor & Destructor
 
-	Card(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics);
+	/* Constructs the card */
+	Card(int cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics);
+
+	/* Deconstructor for the card */
 	virtual ~Card();
 
 	#pragma endregion
