@@ -3,6 +3,8 @@
 
 using namespace std;
 
+class Player;
+
 class Card
 {
 public:
@@ -70,6 +72,9 @@ public:
 
 	// When false the card is considered dead
 	bool Alive;
+
+	// The player that owns this card
+	Player* Owner;
 
 	#pragma endregion
 

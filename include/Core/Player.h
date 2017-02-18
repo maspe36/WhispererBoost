@@ -1,8 +1,10 @@
 #pragma once
 #include <vector>
+#include <random>
 
 using namespace std;
 
+class Game;
 class Card;
 class Creature;
 class Spell;
@@ -48,6 +50,9 @@ public:
 
 	// The seed used to shuffle this players cards 
 	mt19937 Seed;
+
+	// The game this player is currently in
+	Game* CurrentGame;
 
 	#pragma endregion
 

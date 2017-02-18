@@ -1,5 +1,7 @@
 #include "..\include\Core\Player.h"
 
+#include "Core\Card.h"
+
 #include <algorithm>
 #include <random>
 
@@ -31,8 +33,13 @@ void Player::RefillMana()
 }
 
 Player::Player(string name, vector<Card*> deck)
-	: Name(name), Deck(deck), Health(30), Mana(1), TotalMana(1), Alive(true), Seed(random_device{}())
+	: Name(name), Deck(deck), Alive(true), Seed(random_device{}())
 {
+	// Set the owner to this for all cards in the players deck
+	for (Card* card : Deck)
+	{
+		card->Owner = this;
+	}
 }
 
 Player::~Player()
