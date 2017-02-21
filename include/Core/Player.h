@@ -70,6 +70,12 @@ public:
 	/* Refill the mana available to a player to their total mana */
 	void RefillMana();
 
+	/* Plays a card into the appropriate area */
+	void PlayCard(Card* card);
+
+	/* Returns true if the card is playable */
+	bool IsPlayable(Card* card);
+
 	#pragma endregion
 
 	#pragma region Constructor & Destructor

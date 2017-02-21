@@ -26,7 +26,7 @@ public:
 
 	#pragma region Constructor & Destructor
 
-	Creature(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics, int attack, int defense);
+	Creature(int cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics, int attack, int defense);
 	virtual ~Creature();
 
 	#pragma endregion
