@@ -27,7 +27,7 @@ public:
 
 	#pragma endregion
 
-	#pragma region Public Methods
+	#pragma region Methods
 
 	/* Returns a pointer of a new Connection instance with the appropriate io_service. */
 	static pointer Create(boost::asio::io_service& ioService);
@@ -49,14 +49,14 @@ public:
 
 private:
 
-	#pragma region Private Instance Vars
+	#pragma region Instance Vars
 
 	/* The socket our client connects on */
 	boost::asio::ip::tcp::socket socket;
 
 	#pragma endregion
 
-	#pragma region PrivateMethods
+	#pragma region Methods
 
 	/* Method to be called after we recieve word back from the client */
 	void OnReceive(const boost::system::error_code& erorCode);
@@ -66,7 +66,7 @@ private:
 
 	#pragma endregion
 
-	#pragma region Private Constructor
+	#pragma region Constructor
 
 	/* Creates a new client and returns a pointer */
 	Client(boost::asio::io_service& ioService);

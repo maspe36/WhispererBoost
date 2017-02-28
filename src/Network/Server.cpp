@@ -1,6 +1,13 @@
 #include "../include/Network/Server.h"
 
-/* Start a server with an io_service, on the designated port  */
+void Server::WriteToAll(std::string data)
+{
+	for (auto i : clients)
+	{
+		i->Write(data);
+	}
+}
+
 Server::Server(boost::asio::io_service & io_service, int Port)
 	: acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), Port))
 {
@@ -8,15 +15,6 @@ Server::Server(boost::asio::io_service & io_service, int Port)
 	Start();
 }
 
-void Server::WriteToAll(std::string data)
-{
-	for (auto i : clients) 
-	{
-		i->Write(data);
-	}
-}
-
-/* Creates a new connection object and waits for a connection asynchronously  */
 void Server::Start()
 {
 	Client::pointer NewClient =
@@ -28,11 +26,6 @@ void Server::Start()
 			boost::asio::placeholders::error));
 }
 
-/* 
-Method to be called on a connection completion.
-Checks to see if the connection is good, and if it is runs the start method. 
-Then return to StartAccept() with another function call.
-*/
 void Server::OnAccept(Client::pointer NewClient, const boost::system::error_code & error)
 {
 	if (!error)
@@ -45,7 +38,6 @@ void Server::OnAccept(Client::pointer NewClient, const boost::system::error_code
 	Start();
 }
 
-/* Method to be called when the connection closes */
 void Server::DoClose(Client::pointer connection)
 {
 	std::cout << "Lost connection to client!" << std::endl;
