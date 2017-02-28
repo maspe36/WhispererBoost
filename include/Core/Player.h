@@ -15,43 +15,43 @@ class Player
 public:
 	#pragma region Instance Vars
 
-	// A players name
+	/* A players name */
 	string Name;
 
-	// A players health 
+	/* A players health */
 	int Health;
 
-	// A players available mana
+	/* A players available mana */
 	int Mana;
 
-	// A players total mana
+	/* A players total mana */
 	int TotalMana;
 
-	// When false the player is considered dead
+	/* When false the player is considered dead */
 	bool Alive;
 
-	// The cards in the players hand
+	/* The cards in the players hand */
 	vector<Card*> Hand;
 
-	// A players deck of cards
+	/* A players deck of cards */
 	vector<Card*> Deck;
 
-	// A players graveyard
+	/* A players graveyard */
 	vector<Card*> Graveyard;
 
-	// A players creatures in play
+	/* A players creatures in play */
 	vector<Creature*> Creatures;
 
-	// A players spells in play
+	/* A players spells in play */
 	vector<Spell*> Spells;
 
-	// A players constants in play
+	/* A players constants in play */
 	vector<Constant*> Constants;
 
-	// The seed used to shuffle this players cards 
+	/* The seed used to shuffle this players cards */
 	mt19937 Seed;
 
-	// The game this player is currently in
+	/* The game this player is currently in */
 	Game* CurrentGame;
 
 	#pragma endregion

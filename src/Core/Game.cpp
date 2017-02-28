@@ -4,10 +4,33 @@
 
 void Game::Start()
 {
+	// Inital draw and mulligan
+	MulliganState();
+
+	// "Normal" game loop logic
+	PlayState();
 }
 
 void Game::MulliganState()
 {
+	// Each player draws 5 cards
+	for (auto i : Players)
+	{
+		i->Draw(5);
+	}
+
+	// Let them decide what cards to keep
+
+
+	// Make sure all players have 5 cards in hand
+	for (auto i : Players)
+	{
+		size_t HandSize = i->Hand.size();
+		if (HandSize < 5)
+		{
+			i->Draw(5 - HandSize);
+		}
+	}
 }
 
 void Game::PlayState()

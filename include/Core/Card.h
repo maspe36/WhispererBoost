@@ -10,7 +10,7 @@ class Card
 public:
 	#pragma region Enums
 
-	// Different colors available for a card
+	/* Different colors available for a card */
 	enum class ColorVariants
 	{
 		Black,
@@ -21,7 +21,7 @@ public:
 		White
 	};
 
-	// Different types of cards
+	/* Different types of cards */
 	enum class TypeVariants
 	{
 		Constant,
@@ -29,7 +29,7 @@ public:
 		Spell
 	};
 
-	// Different possible "mechanics" or types of effects
+	/* Different possible "mechanics" or types of effects */
 	enum MechanicVariants
 	{
 		None,
@@ -52,28 +52,28 @@ public:
 
 	#pragma region Instance Vars
 
-	// The mana cost to play this card
+	/* The mana cost to play this card */
 	int Cost;
 
-	// A cards name
+	/* A cards name */
 	string Name;
 
-	// The wording on a card
+	/* The wording on a card */
 	string Text;
 
-	// Color of the card
+	/* Color of the card */
 	ColorVariants Color;
 
-	// Type of the card
+	/* Type of the card */
 	TypeVariants Type;
 
-	// The different mechanics a card has
+	/* The different mechanics a card has */
 	vector<MechanicVariants> Mechanics;
 
-	// When false the card is considered dead
+	/* When false the card is considered dead */
 	bool Alive;
 
-	// The player that owns this card
+	/* The player that owns this card */
 	Player* Owner;
 
 	#pragma endregion

@@ -12,29 +12,29 @@ class Game
 public:
 	#pragma region Constants
 
-	// The starting health for all players
+	/* The starting health for all players */
 	const int PLAYER_HEALTH;
 
-	// The starting mana for all players
+	/* The starting mana for all players */
 	const int PLAYER_MANA;
 
 	#pragma endregion
 
 	#pragma region InstanceVars
 
-	// The players participating in the game
+	/* The players participating in the game */
 	vector<Player*> Players;
 
-	// Order of cards played in current game
+	/* Order of cards played in current game */
 	vector<Card*> CardOrder;
 
-	// Game history
+	/* Game history */
 	vector<Action*> History;
 
-	// Pointer to the active player 
+	/* Pointer to the active player */
 	Player* Active;
 
-	// Index in Players to the active player
+	/* Index in Players to the active player */
 	int ActiveIndex;
 
 	#pragma endregion
