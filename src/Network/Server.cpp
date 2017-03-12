@@ -1,10 +1,12 @@
 #include "../include/Network/Server.h"
 
+#include "Core\Player.h"
+
 void Server::WriteToAll(std::string data)
 {
 	for (auto i : clients)
 	{
-		i->Write(data);
+		i->m_Client->Write(data);
 	}
 }
 
@@ -30,7 +32,6 @@ void Server::OnAccept(Client::pointer NewClient, const boost::system::error_code
 {
 	if (!error)
 	{
-		clients.push_back(NewClient);
 		NewClient->Start();
 		std::cout << "Client connected!" << std::endl;
 	}

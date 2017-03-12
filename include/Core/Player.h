@@ -2,6 +2,8 @@
 #include <vector>
 #include <random>
 
+#include "Network\Client.h"
+
 using namespace std;
 
 class Game;
@@ -56,7 +58,7 @@ public:
 	Game* CurrentGame;
 
 	/* The client interface for this player */
-	Client& m_Client;
+	Client::pointer m_Client;
 
 	#pragma endregion
 
@@ -85,7 +87,7 @@ public:
 	#pragma region Constructor & Destructor
 
 	/* Create a new player with a given name and deck of cards */
-	Player(string name, vector<Card*> deck, Client client);
+	Player(string name, vector<Card*> deck, Client::pointer client);
 
 	/* Deconstructor for a player */
 	~Player();

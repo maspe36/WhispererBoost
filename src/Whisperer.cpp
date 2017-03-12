@@ -21,17 +21,6 @@ int main()
 		boost::thread ioThread(
 			boost::bind(&boost::asio::io_service::run, &io_service));
 
-		// Game logic and matchmaking logic goes here
-
-		/* 
-		1. Create players from the connected clients
-		2. Fill their decks with a string from the client
-		3. Create a new game object with the vector of created players
-		4. Start the game
-		*/
-
-
-
 		/*
 		std::string data;
 		while (data != "exit")

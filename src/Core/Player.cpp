@@ -70,7 +70,7 @@ bool Player::IsPlayable(Card* card)
 	}
 }
 
-Player::Player(string name, vector<Card*> deck, Client client)
+Player::Player(string name, vector<Card*> deck, Client::pointer client)
 	: Name(name), Deck(deck), Alive(true), Seed(random_device{}()), m_Client(client)
 {
 	// Set the owner to this for all cards in the players deck

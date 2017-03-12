@@ -1,5 +1,8 @@
 #include "../include/Network/Client.h"
 
+#include "Core\Player.h"
+#include "Core\Card.h"
+
 typedef boost::shared_ptr<Client> pointer;
 
 pointer Client::Create(boost::asio::io_service & ioService)
@@ -16,7 +19,7 @@ void Client::Start()
 {
 	Write("Connected!");
 	// Calls OnReceive when a message is recieved
-	boost::asio::async_read_until(socket, sbuffer, delimeter.at(0), boost::bind(&Client::OnReceive, shared_from_this(), boost::asio::placeholders::error));
+	boost::asio::async_read_until(socket, sbuffer, delimeter.at(0), boost::bind(&Client::OnFirstReceive, shared_from_this(), boost::asio::placeholders::error));
 
 	std::cout << "Listening for messages from client..." << std::endl;
 }
@@ -43,24 +46,39 @@ void Client::DoClose()
 	socket.close();
 }
 
-void Client::OnWrite(const boost::system::error_code & errorCode, size_t bytesTransferred)
+std::string Client::GetString(boost::asio::streambuf& sbuffer)
 {
+	boost::asio::streambuf::const_buffers_type bufs = sbuffer.data();
+	std::string data(
+		boost::asio::buffers_begin(bufs),
+		boost::asio::buffers_begin(bufs) + sbuffer.size());
+
+	// Return everything except the last character delimeter
+	return data.substr(0, data.size() - 1);
 }
 
-void Client::OnReceive(const boost::system::error_code & errorCode)
+void Client::OnFirstReceive(const boost::system::error_code & errorCode)
 {
+	/* Create this clients equivlent player */
 	if (errorCode == 0)
 	{
-		// Get the string from the client
-		boost::asio::streambuf::const_buffers_type bufs = sbuffer.data();
-		std::string data(
-			boost::asio::buffers_begin(bufs),
-			boost::asio::buffers_begin(bufs) + sbuffer.size());
+		std::string data = GetString(sbuffer);
 
-		// Send the string minus the delimiter
-		std::cout << "Client: " << data.substr(0, data.size() - 1) << std::endl;
+		// Print the string minus the delimiter
+		std::cout << "Client 1st Recieve: " << data << std::endl;
 
-		// Empty the stream buffer(?)
+		// Example string...
+		// maspe36#Hellhound; Foo; Bar;
+		// Before the # is the name of the player, and after are the cards names seperated by ';'.
+
+		std::string name;
+		std::vector<Card*> cards;
+
+
+
+		m_Player = new Player(name, cards, shared_from_this());
+
+		// Empty the stream buffer
 		sbuffer.consume(sbuffer.size());
 
 		boost::asio::async_read_until(socket, sbuffer, delimeter.at(0), boost::bind(&Client::OnReceive, shared_from_this(), boost::asio::placeholders::error));
@@ -70,6 +88,31 @@ void Client::OnReceive(const boost::system::error_code & errorCode)
 		// We probably want to handle this differently in the future
 		DoClose();
 	}
+}
+
+void Client::OnReceive(const boost::system::error_code & errorCode)
+{
+	if (errorCode == 0)
+	{
+		std::string data = GetString(sbuffer);
+
+		// Print the string minus the delimiter
+		std::cout << "Client: " << data << std::endl;
+
+		// Empty the stream buffer
+		sbuffer.consume(sbuffer.size());
+
+		boost::asio::async_read_until(socket, sbuffer, delimeter.at(0), boost::bind(&Client::OnReceive, shared_from_this(), boost::asio::placeholders::error));
+	}
+	else
+	{
+		// We probably want to handle this differently in the future
+		DoClose();
+	}
+}
+
+void Client::OnWrite(const boost::system::error_code & errorCode, size_t bytesTransferred)
+{
 }
 
 Client::Client(boost::asio::io_service & ioService)

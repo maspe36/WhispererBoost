@@ -6,6 +6,8 @@
 #include <boost/algorithm/string.hpp>
 #include <iostream>
 
+class Player;
+
 class Client
 	: public boost::enable_shared_from_this<Client>
 {
@@ -24,6 +26,9 @@ public:
 
 	/* The stream buffer this client will read from */
 	boost::asio::streambuf sbuffer;
+
+	/* The game representation of this client */
+	Player* m_Player;
 
 	#pragma endregion
 
@@ -58,12 +63,18 @@ private:
 
 	#pragma region Methods
 
+	/* Returns the string from the buffer without the delimeter */
+	std::string GetString(boost::asio::streambuf& sbuffer);
+
+	/* Method to be called after we recieve word back from the client for the first time */
+	void OnFirstReceive(const boost::system::error_code& erorCode);
+
 	/* Method to be called after we recieve word back from the client */
-	void OnReceive(const boost::system::error_code& erorCode);
+	void OnReceive(const boost::system::error_code& errorCode);
 
 	/* Method to be called after we write to the client */
 	void OnWrite(const boost::system::error_code& errorCode, size_t bytesTransferred);
-
+	
 	#pragma endregion
 
 	#pragma region Constructor

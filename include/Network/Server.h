@@ -1,13 +1,15 @@
 #pragma once
 #include "Client.h"
 
+class Player;
+
 class Server
 {
 public:
 	#pragma region Instance Vars
 
 	/* All the connected clients */
-	std::vector<Client::pointer> clients;
+	std::vector<Player*> clients;
 
 	#pragma endregion
 
