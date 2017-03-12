@@ -9,6 +9,7 @@ class Card;
 class Creature;
 class Spell;
 class Constant;
+class Client;
 
 class Player
 {
@@ -54,6 +55,9 @@ public:
 	/* The game this player is currently in */
 	Game* CurrentGame;
 
+	/* The client interface for this player */
+	Client& m_Client;
+
 	#pragma endregion
 
 	#pragma region Methods
@@ -81,7 +85,7 @@ public:
 	#pragma region Constructor & Destructor
 
 	/* Create a new player with a given name and deck of cards */
-	Player(string name, vector<Card*> deck);
+	Player(string name, vector<Card*> deck, Client client);
 
 	/* Deconstructor for a player */
 	~Player();

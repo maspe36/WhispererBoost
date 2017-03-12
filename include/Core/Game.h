@@ -76,7 +76,7 @@ public:
 	#pragma region Constructors & Destructor
 
 	/* Create a new game and set all players health and mana to the game settings */
-	Game(vector<Player*> players);
+	explicit Game(vector<Player*> players);
 
 	/* Deconstructor for a game */
 	~Game();

@@ -6,6 +6,8 @@
 #include "Core\Derived\Spell.h"
 #include "Core\Game.h"
 
+#include "Network\Client.h"
+
 #include <algorithm>
 #include <random>
 
@@ -68,8 +70,8 @@ bool Player::IsPlayable(Card* card)
 	}
 }
 
-Player::Player(string name, vector<Card*> deck)
-	: Name(name), Deck(deck), Alive(true), Seed(random_device{}())
+Player::Player(string name, vector<Card*> deck, Client client)
+	: Name(name), Deck(deck), Alive(true), Seed(random_device{}()), m_Client(client)
 {
 	// Set the owner to this for all cards in the players deck
 	for (Card* card : Deck)
