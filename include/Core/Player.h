@@ -36,6 +36,9 @@ public:
 	/* The cards in the players hand */
 	vector<Card*> Hand;
 
+	/* The cards this player kept off the muligan */
+	string Mulligan;
+
 	/* A players deck of cards */
 	vector<Card*> Deck;
 

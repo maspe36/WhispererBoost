@@ -6,6 +6,7 @@ using namespace std;
 class Player;
 class Action;
 class Card;
+class Server;
 
 class Game
 {
@@ -36,6 +37,9 @@ public:
 
 	/* Index in Players to the active player */
 	int ActiveIndex;
+
+	/* The server this game is from */
+	Server* m_Server;
 
 	#pragma endregion
 
@@ -76,7 +80,7 @@ public:
 	#pragma region Constructors & Destructor
 
 	/* Create a new game and set all players health and mana to the game settings */
-	explicit Game(vector<Player*> players);
+	explicit Game(vector<Player*> players, Server* server);
 
 	/* Deconstructor for a game */
 	~Game();

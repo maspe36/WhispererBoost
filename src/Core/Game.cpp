@@ -1,9 +1,12 @@
 #include "..\include\Core\Game.h"
 
 #include "Core\Player.h"
+#include "Network\Server.h"
 
 void Game::Start()
 {
+	std::cout << "Game started!" << std::endl;
+
 	// Inital draw and mulligan
 	MulliganState();
 
@@ -16,11 +19,43 @@ void Game::MulliganState()
 	// Each player draws 5 cards
 	for (auto i : Players)
 	{
-		i->Draw(5);
+		//i->Draw(5);
 	}
 
 	// Let them decide what cards to keep
+	int playersDone = 0;
+	vector<Player*> tempPlayers = Players;
+	Player* tempPlayer;
 
+	std::cout << tempPlayers.size() << std::endl;
+
+	for (auto player : Players)
+	{
+		player->m_Client->Write("Select the cards you wish to keep...");
+		//player->m_Client->Write(print cards in hand)
+	}
+
+	while (true) 
+	{
+		for (Player* player : tempPlayers)
+		{
+			if (!player->Mulligan.empty())
+			{
+				// Store the pointer of the player done mulliganning
+				tempPlayer = player;
+				playersDone++;
+			}
+		}
+
+		// Attempt to remove it
+		tempPlayers.erase(std::remove(tempPlayers.begin(), tempPlayers.end(), tempPlayer), tempPlayers.end());
+
+		// Are we done?
+		if (playersDone == Players.size()) 
+		{
+			break;
+		}
+	}
 
 	// Make sure all players have 5 cards in hand
 	for (auto i : Players)
@@ -76,7 +111,7 @@ bool Game::IsGameOver()
 {
 	int aliveCounter = 0;
 
-	for (Player* player : Players) 
+	for (auto player : Players) 
 	{
 		if (player->Alive) 
 		{
@@ -92,12 +127,19 @@ bool Game::IsGameOver()
 	return false;
 }
 
-Game::Game(vector<Player*> players)
-	: Players(players), PLAYER_HEALTH(30), PLAYER_MANA(1), Active(players.at(0)), ActiveIndex(0)
+Game::Game(vector<Player*> players, Server* server)
+	: Players(players), m_Server(server), PLAYER_HEALTH(30), PLAYER_MANA(1), Active(players.at(0)), ActiveIndex(0)
 {
+	std::cout << "Game created, initializing game settings..." << std::endl;
+
+	for (auto p : Players)
+	{
+		std::cout << p->Name << " is here with us today!" << endl;
+	}
+
 	// Right now the first player given is the first active player (first to play)
 	// Set all the players heal and starting mana according to this games settings
-	for (Player* player : Players)
+	for (auto player : Players)
 	{
 		player->Health = PLAYER_HEALTH;
 		player->Mana = PLAYER_MANA;

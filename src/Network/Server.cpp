@@ -4,9 +4,9 @@
 
 void Server::WriteToAll(std::string data)
 {
-	for (auto i : clients)
+	for (auto i : m_Clients)
 	{
-		i->m_Client->Write(data);
+		i->Write(data);
 	}
 }
 
@@ -28,11 +28,12 @@ void Server::Start()
 			boost::asio::placeholders::error));
 }
 
-void Server::OnAccept(Client::pointer NewClient, const boost::system::error_code & error)
+void Server::OnAccept(Client::pointer newClient, const boost::system::error_code & error)
 {
 	if (!error)
 	{
-		NewClient->Start();
+		newClient->Start(this);
+		m_Clients.push_back(newClient);
 		std::cout << "Client connected!" << std::endl;
 	}
 	// pesudo recursive

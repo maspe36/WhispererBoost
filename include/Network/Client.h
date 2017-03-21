@@ -7,6 +7,7 @@
 #include <iostream>
 
 class Player;
+class Server;
 
 class Client
 	: public boost::enable_shared_from_this<Client>
@@ -21,14 +22,17 @@ public:
 
 	#pragma region Instance Vars
 
-	/* The delimeter we append to the end of a message for the client to know we are done writing */
+	/* The delimeter we append to the end of a message for the client to know we are done writing. */
 	const std::string delimeter = "#";
 
-	/* The stream buffer this client will read from */
+	/* The stream buffer this client will read from. */
 	boost::asio::streambuf sbuffer;
 
-	/* The game representation of this client */
+	/* The game representation of this client. */
 	Player* m_Player;
+
+	/* The server this client is connected to. */
+	Server* m_Server;
 
 	#pragma endregion
 
@@ -37,12 +41,11 @@ public:
 	/* Returns a pointer of a new Connection instance with the appropriate io_service. */
 	static pointer Create(boost::asio::io_service& ioService);
 
-	/* Returns the socket used in the connection */
+	/* Returns the socket used in the connection. */
 	boost::asio::ip::tcp::socket& GetSocket();
 
-	/* Method to be called when we know the connection is good.
-	Right now it simply writes hello world to the new client asynchronously */
-	void Start();
+	/* Method to be called when we know the connection is good. */
+	void Start(Server* server);
 
 	/* Writes the given string as a byte stream, accepts any size string */
 	void Write(std::string data);
@@ -66,11 +69,17 @@ private:
 	/* Returns the string from the buffer without the delimeter */
 	std::string GetString(boost::asio::streambuf& sbuffer);
 
-	/* Method to be called after we recieve word back from the client for the first time */
-	void OnFirstReceive(const boost::system::error_code& erorCode);
+	/* Method to be called after we recieve word back from the client for the first time, get their username. */
+	void UserNameReceive(const boost::system::error_code& errorCode);
+
+	/* Method to be called after we recieve word back from the client for the second time, get the deck they will use. */
+	void DeckReceive(const boost::system::error_code& errorCode);
+
+	/* Method to be called when we are listening for a mulligan response from this client */
+	void MulliganRecieve(const boost::system::error_code& errorCode);
 
 	/* Method to be called after we recieve word back from the client */
-	void OnReceive(const boost::system::error_code& errorCode);
+	//void OnReceive(const boost::system::error_code& errorCode);
 
 	/* Method to be called after we write to the client */
 	void OnWrite(const boost::system::error_code& errorCode, size_t bytesTransferred);

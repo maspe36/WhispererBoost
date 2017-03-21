@@ -1,4 +1,7 @@
 #pragma once
+
+#include <queue>
+
 #include "Client.h"
 
 class Player;
@@ -9,7 +12,10 @@ public:
 	#pragma region Instance Vars
 
 	/* All the connected clients */
-	std::vector<Player*> clients;
+	std::vector<Client::pointer> m_Clients;
+
+	/* All fully registered clients looking for a game. */
+	std::queue<Player*> MatchQueue;
 
 	#pragma endregion
 
