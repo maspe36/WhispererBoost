@@ -2,7 +2,7 @@
 #include <vector>
 #include <random>
 
-#include "Network\Client.h"
+#include "Network/Client.h"
 
 using namespace std;
 
@@ -83,7 +83,7 @@ public:
 	void PlayCard(Card* card);
 
 	/* Returns true if the card is playable */
-	bool IsPlayable(Card* card);
+	bool IsPlayable(Card* card) const;
 
 	#pragma endregion
 

@@ -1,4 +1,4 @@
-#include "Core\Derived\Creature.h"
+#include "Core/Derived/Creature.h"
 
 Creature::Creature(int cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics, int attack, int defense)
 	: Card(cost, name, text, color, type, mechanics), 

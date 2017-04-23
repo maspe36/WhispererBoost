@@ -1,5 +1,5 @@
 #pragma once
-#include "..\include\Core\Card.h"
+#include "../include/Core/Card.h"
 
 class Creature :
 	public Card

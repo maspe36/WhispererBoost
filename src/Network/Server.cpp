@@ -1,6 +1,8 @@
 #include "../include/Network/Server.h"
 
-#include "Core\Player.h"
+#include "Core/Player.h"
+#include <iostream>
+#include <boost/bind/bind.hpp>
 
 void Server::WriteToAll(std::string data)
 {

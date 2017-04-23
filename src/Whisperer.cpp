@@ -1,12 +1,9 @@
-#include "stdafx.h"
 #include <string>
-#include <sstream>
-#include <algorithm>
 
-#include "Core\Game.h"
-#include "Core\Player.h"
-#include "Network\Server.h"
-#include "boost\thread.hpp"
+#include "Core/Game.h"
+#include "Core/Player.h"
+#include "Network/Server.h"
+#include "boost/thread.hpp"
 
 using namespace std;
 
@@ -25,7 +22,7 @@ int main()
 			boost::bind(&boost::asio::io_service::run, &io_service));
 		
 		// Consistently try to find games.
-		while (1)
+		while (true)
 		{
 			if (server->MatchQueue.size() >= 2) 
 			{
@@ -47,12 +44,13 @@ int main()
 
 				std::cout << "Starting game between " << firstPlayer->Name << " and " << secondPlayer->Name << "..." << std::endl;
 
+				server->WriteToAll("wtf");
+
 				Game* newGame = new Game({ firstPlayer, secondPlayer }, server);
 				newGame->Start();
+				
 			}
 		}
-
-		ioThread.join();
 	}
 	catch (std::exception& e)
 	{

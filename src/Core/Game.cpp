@@ -1,11 +1,14 @@
-#include "..\include\Core\Game.h"
+#include "../include/Core/Game.h"
 
-#include "Core\Player.h"
-#include "Network\Server.h"
+#include "Core/Player.h"
+#include "Network/Server.h"
+
+#include <thread>
+#include "boost/thread.hpp"
 
 void Game::Start()
 {
-	std::cout << "Game started!" << std::endl;
+	cout << "Game started!" << endl;
 
 	// Inital draw and mulligan
 	MulliganState();
@@ -17,17 +20,17 @@ void Game::Start()
 void Game::MulliganState()
 {
 	// Each player draws 5 cards
-	for (auto i : Players)
-	{
-		//i->Draw(5);
-	}
+	//for (auto i : Players)
+	//{
+	//	//i->Draw(5);
+	//}
 
 	// Let them decide what cards to keep
 	int playersDone = 0;
 	vector<Player*> tempPlayers = Players;
 	Player* tempPlayer;
 
-	std::cout << tempPlayers.size() << std::endl;
+	cout << tempPlayers.size() << endl;
 
 	for (auto player : Players)
 	{
@@ -35,7 +38,7 @@ void Game::MulliganState()
 		//player->m_Client->Write(print cards in hand)
 	}
 
-	while (true) 
+	while (true)
 	{
 		for (Player* player : tempPlayers)
 		{
@@ -48,10 +51,10 @@ void Game::MulliganState()
 		}
 
 		// Attempt to remove it
-		tempPlayers.erase(std::remove(tempPlayers.begin(), tempPlayers.end(), tempPlayer), tempPlayers.end());
+		tempPlayers.erase(remove(tempPlayers.begin(), tempPlayers.end(), tempPlayer), tempPlayers.end());
 
 		// Are we done?
-		if (playersDone == Players.size()) 
+		if (playersDone == Players.size())
 		{
 			break;
 		}
@@ -63,13 +66,26 @@ void Game::MulliganState()
 		size_t HandSize = i->Hand.size();
 		if (HandSize < 5)
 		{
-			i->Draw(5 - HandSize);
+			//i->Draw(5 - HandSize);
 		}
 	}
 }
 
-void Game::PlayState()
+void Game::PlayState() const
 {
+	// The client will dictate the flow through the game methods based on when they send etc.
+	cout << ActivePlayer->Name << " is going first!" << endl;
+	ActivePlayer->m_Client->Write("Test");
+
+	// The main game loop
+	while (true)
+	{
+		if (!ActivePlayer->m_Client->Listening)
+		{
+			// Turn start maintenance
+			ActivePlayer->m_Client->StartListening();
+		}
+	}
 }
 
 void Game::StartTurn()
@@ -80,19 +96,26 @@ void Game::EndTurn()
 {
 }
 
+void Game::HandlePlay(string play) const
+{
+	ActivePlayer->m_Client->m_Server->WriteToAll(play);
+}
+
 void Game::ChangeActivePlayer()
 {
 	//If the active player is the last item in the vector
-	if (ActiveIndex == (Players.size() - 1)) {
+	if (ActiveIndex == (Players.size() - 1))
+	{
 		//Set it to the front of the vector
 		ActiveIndex = 0;
 	}
-	else {
+	else
+	{
 		ActiveIndex++;
 	}
-	
+
 	// Set the active player pointer
-	Active = Players.at(ActiveIndex);
+	ActivePlayer = Players.at(ActiveIndex);
 }
 
 void Game::ClearDeadCards()
@@ -111,9 +134,9 @@ bool Game::IsGameOver()
 {
 	int aliveCounter = 0;
 
-	for (auto player : Players) 
+	for (auto player : Players)
 	{
-		if (player->Alive) 
+		if (player->Alive)
 		{
 			aliveCounter++;
 		}
@@ -128,13 +151,13 @@ bool Game::IsGameOver()
 }
 
 Game::Game(vector<Player*> players, Server* server)
-	: Players(players), m_Server(server), PLAYER_HEALTH(30), PLAYER_MANA(1), Active(players.at(0)), ActiveIndex(0)
+	: PLAYER_HEALTH(30), PLAYER_MANA(1), Players(players), ActivePlayer(players.at(0)), ActiveIndex(0), m_Server(server)
 {
-	std::cout << "Game created, initializing game settings..." << std::endl;
+	cout << "Game created, initializing game settings..." << endl;
 
 	for (auto p : Players)
 	{
-		std::cout << p->Name << " is here with us today!" << endl;
+		cout << p->Name << " is here with us today!" << endl;
 	}
 
 	// Right now the first player given is the first active player (first to play)

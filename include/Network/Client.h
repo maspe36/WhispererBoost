@@ -1,10 +1,7 @@
 #pragma once
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
-#include <boost/bind.hpp>
-#include <boost/array.hpp>
 #include <boost/algorithm/string.hpp>
-#include <iostream>
 
 class Player;
 class Server;
@@ -34,6 +31,9 @@ public:
 	/* The server this client is connected to. */
 	Server* m_Server;
 
+	/* A flag to block on if this client is currently listening */
+	bool Listening;
+
 	#pragma endregion
 
 	#pragma region Methods
@@ -53,6 +53,9 @@ public:
 	/* Method to be called when the connection closes, and handles it cleanly */
 	void DoClose();
 
+	/* Starts listening again after TurnListen died out */
+	void StartListening();
+
 	#pragma endregion
 
 private:
@@ -67,7 +70,7 @@ private:
 	#pragma region Methods
 
 	/* Returns the string from the buffer without the delimeter */
-	std::string GetString(boost::asio::streambuf& sbuffer);
+	static std::string GetString(boost::asio::streambuf& sbuffer);
 
 	/* Method to be called after we recieve word back from the client for the first time, get their username. */
 	void UserNameReceive(const boost::system::error_code& errorCode);
@@ -78,8 +81,8 @@ private:
 	/* Method to be called when we are listening for a mulligan response from this client */
 	void MulliganRecieve(const boost::system::error_code& errorCode);
 
-	/* Method to be called after we recieve word back from the client */
-	//void OnReceive(const boost::system::error_code& errorCode);
+	/* Method to be called in the game loop */
+	void TurnListen(const boost::system::error_code& errorCode);
 
 	/* Method to be called after we write to the client */
 	void OnWrite(const boost::system::error_code& errorCode, size_t bytesTransferred);

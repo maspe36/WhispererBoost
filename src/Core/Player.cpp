@@ -1,12 +1,12 @@
-#include "..\include\Core\Player.h"
+#include "../include/Core/Player.h"
 
-#include "Core\Card.h"
-#include "Core\Derived\Constant.h"
-#include "Core\Derived\Creature.h"
-#include "Core\Derived\Spell.h"
-#include "Core\Game.h"
+#include "Core/Card.h"
+#include "Core/Derived/Constant.h"
+#include "Core/Derived/Creature.h"
+#include "Core/Derived/Spell.h"
+#include "Core/Game.h"
 
-#include "Network\Client.h"
+#include "Network/Client.h"
 
 #include <algorithm>
 #include <random>
@@ -58,7 +58,7 @@ void Player::PlayCard(Card* card)
 	}
 }
 
-bool Player::IsPlayable(Card* card)
+bool Player::IsPlayable(Card* card) const
 {
 	if (Mana >= card->Cost)
 	{
@@ -71,7 +71,7 @@ bool Player::IsPlayable(Card* card)
 }
 
 Player::Player(string name, vector<Card*> deck, Client::pointer client)
-	: Name(name), Deck(deck), Alive(true), Seed(random_device{}()), m_Client(client)
+	: Name(name), Alive(true), Deck(deck), Seed(random_device{}()), m_Client(client)
 {
 	// Set the owner to this for all cards in the players deck
 	for (Card* card : Deck)

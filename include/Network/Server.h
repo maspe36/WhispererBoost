@@ -54,7 +54,7 @@ private:
 	void OnAccept(Client::pointer new_connection, const boost::system::error_code& error);
 
 	/* Method to be called when the connection closes */
-	void DoClose(Client::pointer connection);
+	static void DoClose(Client::pointer connection);
 
 	#pragma endregion
 };

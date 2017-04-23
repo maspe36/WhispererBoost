@@ -1,8 +1,11 @@
 .git/
+.idea/
 x86/
 x64/
 Debug/
+cmake-build-debug/
 packages.config
 WhispererTCG.vcxproj
 WhispererTCG.vcxproj.filters
 WhispererTCG.vcxproj.user
+CMakeLists.txt

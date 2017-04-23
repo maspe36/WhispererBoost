@@ -33,7 +33,7 @@ public:
 	vector<Action*> History;
 
 	/* Pointer to the active player */
-	Player* Active;
+	Player* ActivePlayer;
 
 	/* Index in Players to the active player */
 	int ActiveIndex;
@@ -52,25 +52,28 @@ public:
 	void MulliganState();
 
 	/* Listens for the active players actions (play cards, attack, etc)  */
-	void PlayState();
+	void PlayState() const;
 
 	/* Do things at the start of the active players turn */
-	void StartTurn();
+	static void StartTurn();
 
 	/* Do things at the end of the active players turn */
-	void EndTurn();
+	static void EndTurn();
+
+	/* Handles the next play of a player */
+	void HandlePlay(std::string play) const;
 
 	/* Change the active player to the next one */
 	void ChangeActivePlayer();
 
 	/* Sweep and clear all dead cards in the game */
-	void ClearDeadCards();
+	static void ClearDeadCards();
 
 	/* Sweep and clear all dead players in the game */
-	void ClearDeadPlayers();
+	static void ClearDeadPlayers();
 
 	/* Look at all the effects of cards in CardOrder and potentially trigger them */
-	void CheckEffects(Action* action);
+	static void CheckEffects(Action* action);
 
 	/* Check if the game is over */
 	bool IsGameOver();
