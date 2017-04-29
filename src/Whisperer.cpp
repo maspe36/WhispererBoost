@@ -44,8 +44,6 @@ int main()
 
 				std::cout << "Starting game between " << firstPlayer->Name << " and " << secondPlayer->Name << "..." << std::endl;
 
-				server->WriteToAll("wtf");
-
 				Game* newGame = new Game({ firstPlayer, secondPlayer }, server);
 				newGame->Start();
 				
