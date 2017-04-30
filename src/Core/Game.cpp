@@ -20,10 +20,10 @@ void Game::Start()
 void Game::MulliganState()
 {
 	// Each player draws 5 cards
-	//for (auto i : Players)
-	//{
-	//	//i->Draw(5);
-	//}
+	for (auto i : Players)
+	{
+		//i->Draw(5);
+	}
 
 	// Let them decide what cards to keep
 	int playersDone = 0;
@@ -98,7 +98,7 @@ void Game::EndTurn()
 
 void Game::HandlePlay(string play) const
 {
-	ActivePlayer->m_Client->m_Server->WriteToAll(play);
+	ActivePlayer->m_Client->m_Server->WriteToAll(ActivePlayer->Name + ": " + play);
 }
 
 void Game::ChangeActivePlayer()

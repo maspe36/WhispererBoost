@@ -85,7 +85,7 @@ private:
 	void TurnListen(const boost::system::error_code& errorCode);
 
 	/* Method to be called after we write to the client */
-	void OnWrite(const boost::system::error_code& errorCode, size_t bytesTransferred);
+	void OnWrite(const boost::system::error_code& errorCode, size_t bytesTransferred) const;
 	
 	#pragma endregion
 

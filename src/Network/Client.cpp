@@ -3,10 +3,10 @@
 #include "Core/Game.h"
 #include "Core/Player.h"
 #include "Core/Card.h"
-
 #include "Network/Server.h"
-#include <boost/bind/bind.hpp>
+
 #include <iostream>
+#include <boost/bind/bind.hpp>
 
 typedef boost::shared_ptr<Client> pointer;
 
@@ -26,7 +26,7 @@ void Client::Start(Server* server)
 	this->m_Server = server;
 
 	Write("Connected!");
-	// Calls OnReceive when a message is recieved
+
 	boost::asio::async_read_until(socket, sbuffer, delimeter.at(0), boost::bind(&Client::UserNameReceive, shared_from_this(), boost::asio::placeholders::error));
 
 	std::cout << "Listening for messages from client..." << std::endl;
@@ -145,6 +145,7 @@ void Client::MulliganRecieve(const boost::system::error_code & errorCode)
 
 void Client::TurnListen(const boost::system::error_code & errorCode)
 {
+	/* This makes a call back to the server with the input from the client and keeps listening until the player ends their turn. */
 	if (errorCode == nullptr)
 	{
 		string data = GetString(sbuffer);
@@ -152,7 +153,7 @@ void Client::TurnListen(const boost::system::error_code & errorCode)
 		// Empty the stream buffer
 		sbuffer.consume(sbuffer.size());
 
-		this->m_Server->WriteToAll(data);
+		this->m_Player->CurrentGame->HandlePlay(data);
 
 		// The client wants to end their turn, stop calling this method recursivly and just let it end
 		if (data != "end")
@@ -172,8 +173,9 @@ void Client::TurnListen(const boost::system::error_code & errorCode)
 	}
 }
 
-void Client::OnWrite(const boost::system::error_code & errorCode, size_t bytesTransferred)
+void Client::OnWrite(const boost::system::error_code & errorCode, size_t bytesTransferred) const
 {
+	std::cout << "Sent " + std::to_string(bytesTransferred) + " bytes" << std::endl;
 }
 
 Client::Client(boost::asio::io_service & ioService)

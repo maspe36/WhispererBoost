@@ -1,6 +1,7 @@
 #include "../include/Network/Server.h"
 
 #include "Core/Player.h"
+
 #include <iostream>
 #include <boost/bind/bind.hpp>
 

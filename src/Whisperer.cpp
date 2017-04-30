@@ -1,11 +1,9 @@
-#include <string>
-
 #include "Core/Game.h"
 #include "Core/Player.h"
 #include "Network/Server.h"
-#include "boost/thread.hpp"
 
-using namespace std;
+#include <string>
+#include "boost/thread.hpp"
 
 int main()
 {
