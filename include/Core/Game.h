@@ -17,7 +17,7 @@ public:
 	const int PLAYER_HEALTH;
 
 	/* The starting mana for all players */
-	const int PLAYER_MANA;
+	const vector<int> PLAYER_MANA;
 
 	/* The character that signifies a user attempting to play a card */
 	const static char CARD_PROTOCOL = 'c';

@@ -25,10 +25,10 @@ public:
 	int Health;
 
 	/* A players available mana */
-	int Mana;
+	vector<int> Mana;
 
 	/* A players total mana */
-	int TotalMana;
+	vector<int> TotalMana;
 
 	/* When false the player is considered dead */
 	bool Alive;

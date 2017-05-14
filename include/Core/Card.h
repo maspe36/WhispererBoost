@@ -53,7 +53,7 @@ public:
 	#pragma region Instance Vars
 
 	/* The mana cost to play this card */
-	int Cost;
+	vector<int> Cost;
 
 	/* A cards name */
 	string Name;
@@ -88,7 +88,7 @@ public:
 	#pragma region Constructor & Destructor
 
 	/* Constructs the card */
-	Card(int cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics);
+	Card(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics);
 
 	/* Deconstructor for the card */
 	virtual ~Card();

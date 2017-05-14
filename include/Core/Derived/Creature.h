@@ -30,7 +30,7 @@ public:
 	#pragma region Constructor & Destructor
 
 	/* The constructor for the derived creature class */
-	Creature(int cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics, int attack, int defense);
+	Creature(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics, int attack, int defense);
 
 	/* The virtual destructor for the derived creature class */
 	virtual ~Creature();
