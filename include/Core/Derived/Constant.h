@@ -5,6 +5,12 @@ class Constant :
 	public Card
 {
 public:
+	#pragma region Static Methods
+
+	static Constant* GetConstant(Card* card);
+
+	#pragma endregion 
+
 	#pragma region Constructor & Destructor
 
 	/* The constructor for the derived constant class */

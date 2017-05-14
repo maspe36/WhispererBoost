@@ -27,6 +27,12 @@ public:
 
 	#pragma endregion
 
+	#pragma region Static Methods
+
+	static Creature* GetCreature(Card* card);
+
+	#pragma endregion 
+
 	#pragma region Constructor & Destructor
 
 	/* The constructor for the derived creature class */
