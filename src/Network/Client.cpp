@@ -17,7 +17,7 @@ pointer Client::Create(boost::asio::io_service & ioService)
 
 boost::asio::ip::tcp::socket & Client::GetSocket()
 {
-	return socket;
+	return Socket;
 }
 
 void Client::Start(Server* server)
@@ -27,7 +27,7 @@ void Client::Start(Server* server)
 
 	Write("Connected!");
 
-	boost::asio::async_read_until(socket, sbuffer, delimeter, boost::bind(&Client::UserNameReceive, shared_from_this(), boost::asio::placeholders::error));
+	boost::asio::async_read_until(Socket, Buffer, Delimeter, boost::bind(&Client::UserNameReceive, shared_from_this(), boost::asio::placeholders::error));
 
 	std::cout << "Listening for messages from client..." << std::endl;
 }
@@ -40,9 +40,9 @@ void Client::Write(std::string data)
 	*/
 
 	// Add the delimiter to the string automagically
-	data.append(delimeter);
+	data.append(Delimeter);
 
-	boost::asio::async_write(socket, boost::asio::buffer(data.c_str(), data.size()),
+	boost::asio::async_write(Socket, boost::asio::buffer(data.c_str(), data.size()),
 		boost::bind(&Client::OnWrite, shared_from_this(),
 			boost::asio::placeholders::error,
 			boost::asio::placeholders::bytes_transferred));
@@ -51,13 +51,14 @@ void Client::Write(std::string data)
 void Client::DoClose()
 {
 	std::cout << "Lost connection to client!" << std::endl;
-	socket.close();
+	Socket.close();
 }
 
 void Client::StartListening()
 {
-	listening = true;
-	boost::asio::async_read_until(socket, sbuffer, delimeter, boost::bind(&Client::TurnListen, shared_from_this(), boost::asio::placeholders::error));
+	m_Player->CurrentGame->StartTurn();
+	Listening = true;
+	boost::asio::async_read_until(Socket, Buffer, Delimeter, boost::bind(&Client::TurnListen, shared_from_this(), boost::asio::placeholders::error));
 }
 
 std::string Client::GetString(boost::asio::streambuf& sbuffer)
@@ -76,16 +77,16 @@ void Client::UserNameReceive(const boost::system::error_code & errorCode)
 	/* Create this clients equivlent player */
 	if (errorCode == nullptr)
 	{
-		std::string data = GetString(sbuffer);
+		std::string data = GetString(Buffer);
 
 		// Empty the stream buffer
-		sbuffer.consume(sbuffer.size());
+		Buffer.consume(Buffer.size());
 
 		std::cout << "Client username: " << data << std::endl;
 
 		m_Player = new Player(data, {}, shared_from_this());
 
-		boost::asio::async_read_until(socket, sbuffer, delimeter, boost::bind(&Client::DeckReceive, shared_from_this(), boost::asio::placeholders::error));
+		boost::asio::async_read_until(Socket, Buffer, Delimeter, boost::bind(&Client::DeckReceive, shared_from_this(), boost::asio::placeholders::error));
 	}
 	else
 	{
@@ -98,10 +99,10 @@ void Client::DeckReceive(const boost::system::error_code & errorCode)
 	/* Create this clients deck */
 	if (errorCode == nullptr)
 	{
-		std::string data = GetString(sbuffer);
+		std::string data = GetString(Buffer);
 
 		// Empty the stream buffer
-		sbuffer.consume(sbuffer.size());
+		Buffer.consume(Buffer.size());
 
 		std::cout << m_Player->Name << " deck list: " << data << std::endl;
 
@@ -114,7 +115,7 @@ void Client::DeckReceive(const boost::system::error_code & errorCode)
 		m_Server->MatchQueue.push(m_Player);
 
 		std::cout << m_Player->Name << " is now in queue for a game!" << std::endl;
-		boost::asio::async_read_until(socket, sbuffer, delimeter, boost::bind(&Client::MulliganRecieve, shared_from_this(), boost::asio::placeholders::error));
+		boost::asio::async_read_until(Socket, Buffer, Delimeter, boost::bind(&Client::MulliganRecieve, shared_from_this(), boost::asio::placeholders::error));
 	}
 	else
 	{
@@ -126,10 +127,10 @@ void Client::MulliganRecieve(const boost::system::error_code & errorCode)
 {
 	if (errorCode == nullptr)
 	{
-		std::string data = GetString(sbuffer);
+		std::string data = GetString(Buffer);
 
 		// Empty the stream buffer
-		sbuffer.consume(sbuffer.size());
+		Buffer.consume(Buffer.size());
 
 		// Print the string minus the delimiter
 		std::cout << m_Player->Name << " kept: " << data << std::endl;
@@ -148,10 +149,10 @@ void Client::TurnListen(const boost::system::error_code & errorCode)
 	/* This makes a call back to the server with the input from the client and keeps listening until the player ends their turn. */
 	if (errorCode == nullptr)
 	{
-		string data = GetString(sbuffer);
+		string data = GetString(Buffer);
 
 		// Empty the stream buffer
-		sbuffer.consume(sbuffer.size());
+		Buffer.consume(Buffer.size());
 
 		m_Player->CurrentGame->HandlePlay(data);
 
@@ -159,12 +160,12 @@ void Client::TurnListen(const boost::system::error_code & errorCode)
 		if (data != "end")
 		{
 			// Handle the clients input for the game
-			boost::asio::async_read_until(socket, sbuffer, delimeter, boost::bind(&Client::TurnListen, shared_from_this(), boost::asio::placeholders::error));
+			boost::asio::async_read_until(Socket, Buffer, Delimeter, boost::bind(&Client::TurnListen, shared_from_this(), boost::asio::placeholders::error));
 		}
 		else 
 		{
 			// Stop listening
-			listening = false;
+			Listening = false;
 		}
 	}
 	else
@@ -175,10 +176,9 @@ void Client::TurnListen(const boost::system::error_code & errorCode)
 
 void Client::OnWrite(const boost::system::error_code & errorCode, size_t bytesTransferred) const
 {
-	std::cout << "Sent " + std::to_string(bytesTransferred) + " bytes" << std::endl;
 }
 
 Client::Client(boost::asio::io_service & ioService)
-	: m_Player(nullptr), m_Server(nullptr), listening(false), socket(ioService)
+	: m_Player(nullptr), m_Server(nullptr), Listening(false), Socket(ioService)
 {
 }

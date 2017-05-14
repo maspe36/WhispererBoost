@@ -20,10 +20,10 @@ public:
 	#pragma region Instance Vars
 
 	/* The delimeter we append to the end of a message for the client to know we are done writing. */
-	const std::string delimeter = "\n";
+	const std::string Delimeter = "\n";
 
 	/* The stream buffer this client will read from. */
-	boost::asio::streambuf sbuffer;
+	boost::asio::streambuf Buffer;
 
 	/* The game representation of this client. */
 	Player* m_Player;
@@ -32,7 +32,7 @@ public:
 	Server* m_Server;
 
 	/* A flag to block on if this client is currently listening */
-	bool listening;
+	bool Listening;
 
 	#pragma endregion
 
@@ -63,7 +63,7 @@ private:
 	#pragma region Instance Vars
 
 	/* The socket our client connects on */
-	boost::asio::ip::tcp::socket socket;
+	boost::asio::ip::tcp::socket Socket;
 
 	#pragma endregion
 
@@ -92,7 +92,7 @@ private:
 	#pragma region Constructor
 
 	/* Creates a new client and returns a pointer */
-	Client(boost::asio::io_service& ioService);
+	explicit Client(boost::asio::io_service& ioService);
 
 	#pragma endregion
 };
