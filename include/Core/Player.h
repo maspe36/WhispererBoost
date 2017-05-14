@@ -82,6 +82,9 @@ public:
 	/* Plays a card into the appropriate area */
 	void PlayCard(Card* card);
 
+	/* Removes the given card from this players hand */
+	void RemoveFromHand(Card* card);
+
 	/* Returns true if the card is playable */
 	bool IsPlayable(Card* card) const;
 

@@ -70,13 +70,13 @@ public:
 	void EndTurn() const;
 
 	/* Handle how an attack will go through */
-	void AttackPlay(std::string attack) const;
+	void AttackPlay(std::string attack);
 
 	/* Handle how to play a card */
-	void CardPlay(std::string card) const;
+	void CardPlay(int index);
 
 	/* Handles the the play given for the active player */
-	void HandlePlay(std::string play) const;
+	void HandlePlay(std::string play);
 
 	/* Change the active player to the next one */
 	void ChangeActivePlayer();

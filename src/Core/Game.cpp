@@ -2,6 +2,9 @@
 
 #include "Core/Player.h"
 #include "Network/Server.h"
+#include "Core/Derived/Constant.h"
+#include "Core/Derived/Creature.h"
+#include "Core/Derived/Spell.h"
 
 #include <thread>
 #include "boost/thread.hpp"
@@ -93,24 +96,41 @@ void Game::EndTurn() const
 	m_Server->WriteToAll(ActivePlayer->Name + " turn end");
 }
 
-void Game::AttackPlay(std::string attack) const
+void Game::AttackPlay(std::string attack)
 {
 	m_Server->WriteToAll(ActivePlayer->Name + " attack: " + attack);
 }
 
-void Game::CardPlay(std::string card) const
+void Game::CardPlay(int index)
 {
-	m_Server->WriteToAll(ActivePlayer->Name + " plays card: " + card);
+	Card* card = ActivePlayer->Hand.at(index);
+	CardOrder.push_back(card);
+	
+	// Check the derived type of the card object and play it in the appropriate area
+	if (Creature* CreatureCard = dynamic_cast<Creature*>(card))
+	{
+		card->Owner->Creatures.push_back(CreatureCard);
+	}
+	if (Spell* SpellCard = dynamic_cast<Spell*>(card))
+	{
+		card->Owner->Spells.push_back(SpellCard);
+	}
+	if (Constant* ConstantCard = dynamic_cast<Constant*>(card))
+	{
+		card->Owner->Constants.push_back(ConstantCard);
+	}
+
+	m_Server->WriteToAll(ActivePlayer->Name + " plays card at: " + to_string(index));
 }
 
-void Game::HandlePlay(string play) const
+void Game::HandlePlay(string play)
 {
 	switch (play.at(0)) 
 	{
 		case CARD_PROTOCOL:
 		{
-			std::string card = GetAfterChar(play, CARD_PROTOCOL);
-			CardPlay(card);
+			int index = stoi(GetAfterChar(play, CARD_PROTOCOL));
+			CardPlay(index);
 			break;
 		}
 

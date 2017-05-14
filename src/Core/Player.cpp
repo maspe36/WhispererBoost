@@ -58,6 +58,11 @@ void Player::PlayCard(Card* card)
 	}
 }
 
+void Player::RemoveFromHand(Card * card)
+{
+	Hand.erase(remove(Hand.begin(), Hand.end(), card), Hand.end());
+}
+
 bool Player::IsPlayable(Card* card) const
 {
 	if (Mana >= card->Cost)
