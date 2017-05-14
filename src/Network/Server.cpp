@@ -11,10 +11,12 @@ void Server::WriteToAll(std::string data)
 	{
 		i->Write(data);
 	}
+
+	std::cout << data << std::endl;
 }
 
 Server::Server(boost::asio::io_service & io_service, int Port)
-	: acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), Port))
+	: Acceptor(io_service, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), Port))
 {
 	std::cout << "Listening for clients..." << std::endl;
 	Start();
@@ -23,10 +25,10 @@ Server::Server(boost::asio::io_service & io_service, int Port)
 void Server::Start()
 {
 	Client::pointer NewClient =
-		Client::Create(acceptor.get_io_service());
+		Client::Create(Acceptor.get_io_service());
 
 	// Calls OnAccept when a connection happens
-	acceptor.async_accept(NewClient->GetSocket(),
+	Acceptor.async_accept(NewClient->GetSocket(),
 		boost::bind(&Server::OnAccept, this, NewClient,
 			boost::asio::placeholders::error));
 }

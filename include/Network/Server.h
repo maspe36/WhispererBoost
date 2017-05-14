@@ -29,7 +29,7 @@ public:
 	#pragma region Constructor
 
 	/* Start a server with an io_service, on the designated port  */
-	Server(boost::asio::io_service& io_service, int Port);
+	Server(boost::asio::io_service& io_service, int port);
 
 	#pragma endregion
 
@@ -37,8 +37,8 @@ private:
 	#pragma region Instance Vars
 
 	/* The acceptor for TCP connections */
-	boost::asio::ip::tcp::acceptor acceptor;
-
+	boost::asio::ip::tcp::acceptor Acceptor;
+	
 	#pragma endregion
 
 	#pragma region Methods
