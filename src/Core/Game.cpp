@@ -107,17 +107,17 @@ void Game::CardPlay(int index)
 	CardOrder.push_back(card);
 	
 	// Check the derived type of the card object and play it in the appropriate area
-	if (Creature* CreatureCard = dynamic_cast<Creature*>(card))
+	if (Creature* creature = Creature::GetCreature(card))
 	{
-		card->Owner->Creatures.push_back(CreatureCard);
+		card->Owner->Creatures.push_back(creature);
 	}
-	if (Spell* SpellCard = dynamic_cast<Spell*>(card))
+	if (Spell* spell = Spell::GetSpell(card))
 	{
-		card->Owner->Spells.push_back(SpellCard);
+		card->Owner->Spells.push_back(spell);
 	}
-	if (Constant* ConstantCard = dynamic_cast<Constant*>(card))
+	if (Constant* constant = Constant::GetConstant(card))
 	{
-		card->Owner->Constants.push_back(ConstantCard);
+		card->Owner->Constants.push_back(constant);
 	}
 
 	m_Server->WriteToAll(ActivePlayer->Name + " plays card at: " + to_string(index));
