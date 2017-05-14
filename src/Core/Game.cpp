@@ -111,16 +111,19 @@ void Game::CardPlay(int index)
 	{
 		card->Owner->Creatures.push_back(creature);
 	}
-	if (Spell* spell = Spell::GetSpell(card))
+	else if (Spell* spell = Spell::GetSpell(card))
 	{
 		card->Owner->Spells.push_back(spell);
 	}
-	if (Constant* constant = Constant::GetConstant(card))
+	else if (Constant* constant = Constant::GetConstant(card))
 	{
 		card->Owner->Constants.push_back(constant);
 	}
 
-	m_Server->WriteToAll(ActivePlayer->Name + " plays card at: " + to_string(index));
+	// The card was played, lets remove it from the active players hand
+	ActivePlayer->RemoveFromHand(card);
+
+	m_Server->WriteToAll(card->Owner->Name + " played " + card->Name);
 }
 
 void Game::HandlePlay(string play)
