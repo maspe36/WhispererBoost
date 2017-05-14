@@ -44,7 +44,6 @@ int main()
 
 				Game* newGame = new Game({ firstPlayer, secondPlayer }, server);
 				newGame->Start();
-				
 			}
 		}
 	}
