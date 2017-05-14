@@ -80,7 +80,7 @@ void Game::PlayState() const
 	// The main game loop
 	while (true)
 	{
-		if (!ActivePlayer->m_Client->Listening)
+		if (!ActivePlayer->m_Client->listening)
 		{
 			// Turn start maintenance
 			ActivePlayer->m_Client->StartListening();

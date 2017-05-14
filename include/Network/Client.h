@@ -20,7 +20,7 @@ public:
 	#pragma region Instance Vars
 
 	/* The delimeter we append to the end of a message for the client to know we are done writing. */
-	const std::string delimeter = "#";
+	const std::string delimeter = "\n";
 
 	/* The stream buffer this client will read from. */
 	boost::asio::streambuf sbuffer;
@@ -32,7 +32,7 @@ public:
 	Server* m_Server;
 
 	/* A flag to block on if this client is currently listening */
-	bool Listening;
+	bool listening;
 
 	#pragma endregion
 
