@@ -11,13 +11,22 @@ class Server;
 class Game
 {
 public:
-	#pragma region Constants
+	#pragma region Constants & Protocols
 
 	/* The starting health for all players */
 	const int PLAYER_HEALTH;
 
 	/* The starting mana for all players */
 	const int PLAYER_MANA;
+
+	/* The character that signifies a user attempting to play a card */
+	const static char CARD_PROTOCOL = 'c';
+
+	/* The character that signifies a user attempting to attack */
+	const static char ATTACK_PROTOCOL = 'a';
+
+	/* The character that signifies a user ending their turn */
+	const static char END_PROTOCOL = 'e';
 
 	#pragma endregion
 
@@ -55,12 +64,18 @@ public:
 	void PlayState() const;
 
 	/* Do things at the start of the active players turn */
-	static void StartTurn();
+	void StartTurn() const;
 
 	/* Do things at the end of the active players turn */
-	static void EndTurn();
+	void EndTurn() const;
 
-	/* Handles the next play of a player */
+	/* Handle how an attack will go through */
+	void AttackPlay(std::string attack) const;
+
+	/* Handle how to play a card */
+	void CardPlay(std::string card) const;
+
+	/* Handles the the play given for the active player */
 	void HandlePlay(std::string play) const;
 
 	/* Change the active player to the next one */
@@ -89,5 +104,14 @@ public:
 	~Game();
 
 	#pragma endregion
+
+private:
+	#pragma region Methods
+
+	/* Return a substring of the given string after the given splitter */
+	static std::string GetAfterChar(std::string data, char splitter);
+
+	#pragma endregion 
+
 };
 

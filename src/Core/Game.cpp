@@ -73,32 +73,62 @@ void Game::MulliganState()
 
 void Game::PlayState() const
 {
-	// The client will dictate the flow through the game methods based on when they send etc.
-	cout << ActivePlayer->Name << " is going first!" << endl;
-	ActivePlayer->m_Client->Write("Test");
-
-	// The main game loop
+	// Listen for messages from the correct client
 	while (true)
 	{
-		if (!ActivePlayer->m_Client->listening)
+		if (!ActivePlayer->m_Client->Listening)
 		{
-			// Turn start maintenance
 			ActivePlayer->m_Client->StartListening();
 		}
 	}
 }
 
-void Game::StartTurn()
+void Game::StartTurn() const
 {
+	m_Server->WriteToAll("It is " + ActivePlayer->Name + "'s turn");
 }
 
-void Game::EndTurn()
+void Game::EndTurn() const
 {
+	m_Server->WriteToAll(ActivePlayer->Name + " turn end");
+}
+
+void Game::AttackPlay(std::string attack) const
+{
+	m_Server->WriteToAll(ActivePlayer->Name + " attack: " + attack);
+}
+
+void Game::CardPlay(std::string card) const
+{
+	m_Server->WriteToAll(ActivePlayer->Name + " plays card: " + card);
 }
 
 void Game::HandlePlay(string play) const
 {
-	ActivePlayer->m_Client->m_Server->WriteToAll(ActivePlayer->Name + ": " + play);
+	switch (play.at(0)) 
+	{
+		case CARD_PROTOCOL:
+		{
+			std::string card = GetAfterChar(play, CARD_PROTOCOL);
+			CardPlay(card);
+			break;
+		}
+
+		case ATTACK_PROTOCOL:
+		{
+			std::string attack = GetAfterChar(play, ATTACK_PROTOCOL);
+			AttackPlay(attack);
+			break;
+		}
+
+		case END_PROTOCOL:
+		{
+			EndTurn();
+			break;
+		}
+
+		default: {};
+	}
 }
 
 void Game::ChangeActivePlayer()
@@ -144,7 +174,7 @@ bool Game::IsGameOver()
 
 	if (aliveCounter <= 1)
 	{
-		// There is one or less player alive
+		// There is one or less players alive
 		return true;
 	}
 	return false;
@@ -173,4 +203,10 @@ Game::Game(vector<Player*> players, Server* server)
 
 Game::~Game()
 {
+}
+
+std::string Game::GetAfterChar(std::string data, char splitter)
+{
+	std::string substring = data.substr(data.find(splitter) + 1);
+	return substring;
 }
