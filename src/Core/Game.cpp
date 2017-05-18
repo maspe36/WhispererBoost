@@ -28,40 +28,17 @@ void Game::MulliganState()
 		//i->Draw(5);
 	}
 
-	// Let them decide what cards to keep
-	int playersDone = 0;
-	vector<Player*> tempPlayers = Players;
-	Player* tempPlayer;
-
-	cout << tempPlayers.size() << endl;
+	m_Server->WriteToAll("Select the cards you wish to keep...");
 
 	for (auto player : Players)
 	{
-		player->m_Client->Write("Select the cards you wish to keep...");
 		//player->m_Client->Write(print cards in hand)
 	}
 
-	while (true)
-	{
-		for (Player* player : tempPlayers)
-		{
-			if (!player->Mulligan.empty())
-			{
-				// Store the pointer of the player done mulliganning
-				tempPlayer = player;
-				playersDone++;
-			}
-		}
+	int playersDone = 0;
+	vector<Player*> tempPlayers = Players;
 
-		// Attempt to remove it
-		tempPlayers.erase(remove(tempPlayers.begin(), tempPlayers.end(), tempPlayer), tempPlayers.end());
-
-		// Are we done?
-		if (playersDone == Players.size())
-		{
-			break;
-		}
-	}
+	MulliganLoop(playersDone, tempPlayers);
 
 	// Make sure all players have 5 cards in hand
 	for (auto i : Players)
@@ -70,6 +47,33 @@ void Game::MulliganState()
 		if (HandSize < 5)
 		{
 			//i->Draw(5 - HandSize);
+		}
+	}
+}
+
+void Game::MulliganLoop(int done, vector<Player*> players) const
+{
+	Player* tempPlayer;
+
+	while (true)
+	{
+		for (Player* player : players)
+		{
+			if (!player->Mulligan.empty())
+			{
+				// Store the pointer of the player done mulliganning
+				tempPlayer = player;
+				done++;
+			}
+		}
+
+		// Attempt to remove it
+		players.erase(remove(players.begin(), players.end(), tempPlayer), players.end());
+
+		// Are we done?
+		if (done == Players.size())
+		{
+			break;
 		}
 	}
 }
@@ -91,9 +95,10 @@ void Game::StartTurn() const
 	m_Server->WriteToAll("It is " + ActivePlayer->Name + "'s turn");
 }
 
-void Game::EndTurn() const
+void Game::EndTurn()
 {
 	m_Server->WriteToAll(ActivePlayer->Name + " turn end");
+	ChangeActivePlayer();
 }
 
 void Game::AttackPlay(std::string attack)

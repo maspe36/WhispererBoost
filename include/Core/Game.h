@@ -57,8 +57,11 @@ public:
 	/* Starts the game loop */
 	void Start();
 
-	/* Players decide what cards to mulligan */
+	/* The game state controller for mulligans */
 	void MulliganState();
+
+	/* Inner loop that actually handles a mulligan */
+	void MulliganLoop(int done, vector<Player*> players) const;
 
 	/* Listens for the active players actions (play cards, attack, etc)  */
 	void PlayState() const;
@@ -67,7 +70,7 @@ public:
 	void StartTurn() const;
 
 	/* Do things at the end of the active players turn */
-	void EndTurn() const;
+	void EndTurn();
 
 	/* Handle how an attack will go through */
 	void AttackPlay(std::string attack);
