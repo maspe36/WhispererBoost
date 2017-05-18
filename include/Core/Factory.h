@@ -34,9 +34,18 @@ public:
 	/* Create an instance of a registered class */
 	Card* Create(string name);
 
+	/* Fill the given vector<Card*> with the instances of the cards in the decklist */
+	static void FillDeck(vector<Card*>& deck, std::string decklist, std::string delimeter);
+
 	#pragma endregion 
 
 private:
+	#pragma region Methods
+
+	static vector<string> Split(const string& str, const string& delim);
+
+	#pragma endregion 
+
 	#pragma region Constructor
 
 	/* Empty constructor for a factory */
@@ -44,7 +53,7 @@ private:
 
 	#pragma endregion 
 
-	#pragma region Methods
+	#pragma region Instance Variables
 
 	/* The registry of type constructors */
 	map<string, boost::function<Card*()>> factoryFunctionRegistry;

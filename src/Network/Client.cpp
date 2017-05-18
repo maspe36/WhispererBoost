@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <boost/bind/bind.hpp>
+#include "Core/Factory.h"
 
 typedef boost::shared_ptr<Client> pointer;
 
@@ -106,8 +107,9 @@ void Client::DeckReceive(const boost::system::error_code & errorCode)
 
 		std::cout << m_Player->Name << " deck list: " << data << std::endl;
 
-		// We crash right now because this stinker is empty, no factory yet.
 		std::vector<Card*> cards;
+
+		Factory::FillDeck(cards, data, ",");
 
 		m_Player->Deck = cards;
 

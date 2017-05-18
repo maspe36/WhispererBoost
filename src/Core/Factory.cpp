@@ -33,6 +33,33 @@ Card* Factory::Create(string name)
 	return instance;
 }
 
+void Factory::FillDeck(vector<Card*>& deck, std::string decklist, std::string delimeter)
+{
+	vector<std::string> cardlist = Split(decklist, delimeter);
+
+	for (auto name : cardlist)
+	{
+		auto card = Instance()->Create(name);
+		deck.push_back(card);
+	}
+}
+
+vector<std::string> Factory::Split(const string & text, const string & delimeter)
+{
+	std::vector<std::string> tokens;
+	std::size_t start = 0, end = 0;
+
+	while ((end = text.find(delimeter, start)) != std::string::npos)
+	{
+		tokens.push_back(text.substr(start, end - start));
+		start = end + 1;
+	}
+
+	tokens.push_back(text.substr(start));
+
+	return tokens;
+}
+
 Factory::Factory()
 {
 }
