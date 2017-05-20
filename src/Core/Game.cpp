@@ -25,14 +25,15 @@ void Game::MulliganState()
 	// Each player draws 5 cards
 	for (auto i : Players)
 	{
-		//i->Draw(5);
+		i->Draw(5);
 	}
-
-	m_Server->WriteToAll("Select the cards you wish to keep...");
 
 	for (auto player : Players)
 	{
-		//player->m_Client->Write(print cards in hand)
+		for (auto card : player->Hand)
+		{
+			player->m_Client->Write(card->Name + "\n");
+		}	
 	}
 
 	int playersDone = 0;
@@ -92,18 +93,18 @@ void Game::PlayState() const
 
 void Game::StartTurn() const
 {
-	m_Server->WriteToAll("It is " + ActivePlayer->Name + "'s turn");
+	WriteToPlayers("It is " + ActivePlayer->Name + "'s turn");
 }
 
 void Game::EndTurn()
 {
-	m_Server->WriteToAll(ActivePlayer->Name + " turn end");
+	WriteToPlayers(ActivePlayer->Name + " turn end");
 	ChangeActivePlayer();
 }
 
 void Game::AttackPlay(std::string attack)
 {
-	m_Server->WriteToAll(ActivePlayer->Name + " attack: " + attack);
+	WriteToPlayers(ActivePlayer->Name + " attack: " + attack);
 }
 
 void Game::CardPlay(int index)
@@ -128,7 +129,7 @@ void Game::CardPlay(int index)
 	// The card was played, lets remove it from the active players hand
 	ActivePlayer->RemoveFromHand(card);
 
-	m_Server->WriteToAll(card->Owner->Name + " played " + card->Name);
+	WriteToPlayers(card->Owner->Name + " played " + card->Name);
 }
 
 void Game::HandlePlay(string play)
@@ -208,6 +209,17 @@ bool Game::IsGameOver()
 	return false;
 }
 
+void Game::WriteToPlayers(std::string data) const
+{
+	for (auto player : Players)
+	{
+		if (player->m_Client->Connected)
+		{
+			player->m_Client->Write(data);
+		}
+	}
+}
+
 Game::Game(vector<Player*> players, Server* server)
 	: PLAYER_HEALTH(30), PLAYER_MANA(1), Players(players), ActivePlayer(players.at(0)), ActiveIndex(0), m_Server(server)
 {
@@ -215,7 +227,7 @@ Game::Game(vector<Player*> players, Server* server)
 
 	for (auto p : Players)
 	{
-		cout << p->Name << " is here with us today!" << endl;
+		cout << p->Name << " has joined the game" << endl;
 	}
 
 	// Right now the first player given is the first active player (first to play)
@@ -238,3 +250,4 @@ std::string Game::GetAfterChar(std::string data, char splitter)
 	std::string substring = data.substr(data.find(splitter) + 1);
 	return substring;
 }
+

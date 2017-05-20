@@ -96,6 +96,9 @@ public:
 	/* Check if the game is over */
 	bool IsGameOver();
 
+	/* Write to only the players of this game */
+	void WriteToPlayers(std::string data) const;
+
 	#pragma endregion
 
 	#pragma region Constructors & Destructor
@@ -115,6 +118,5 @@ private:
 	static std::string GetAfterChar(std::string data, char splitter);
 
 	#pragma endregion 
-
 };
 

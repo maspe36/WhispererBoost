@@ -31,8 +31,11 @@ public:
 	/* The server this client is connected to. */
 	Server* m_Server;
 
-	/* A flag to block on if this client is currently listening */
+	/* A flag to block on if this client is currently listening. */
 	bool Listening;
+
+	/* A flag to quickly check if this client is connected and available to be written too. */
+	bool Connected;
 
 	#pragma endregion
 
@@ -47,13 +50,13 @@ public:
 	/* Method to be called when we know the connection is good. */
 	void Start(Server* server);
 
-	/* Writes the given string as a byte stream, accepts any size string */
+	/* Writes the given string as a byte stream, accepts any size string. */
 	void Write(std::string data);
 
-	/* Method to be called when the connection closes, and handles it cleanly */
+	/* Method to be called when the connection closes, and handles it cleanly. */
 	void DoClose();
 
-	/* Starts listening again after TurnListen died out */
+	/* Starts listening again after TurnListen died out. */
 	void StartListening();
 
 	#pragma endregion

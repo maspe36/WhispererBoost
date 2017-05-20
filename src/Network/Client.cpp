@@ -30,6 +30,7 @@ void Client::Start(Server* server)
 
 	boost::asio::async_read_until(Socket, Buffer, Delimeter, boost::bind(&Client::UserNameReceive, shared_from_this(), boost::asio::placeholders::error));
 
+	Connected = true;
 	std::cout << "Listening for messages from client..." << std::endl;
 }
 
@@ -51,7 +52,9 @@ void Client::Write(std::string data)
 
 void Client::DoClose()
 {
+	Connected = false;
 	std::cout << "Lost connection to client!" << std::endl;
+	m_Player->CurrentGame->WriteToPlayers(m_Player->Name + " disconnected!");
 	Socket.close();
 }
 
