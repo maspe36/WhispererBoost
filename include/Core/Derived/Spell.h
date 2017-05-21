@@ -5,12 +5,6 @@ class Spell :
 	public Card
 {
 public:
-	#pragma region Static Methods
-
-	static Spell* GetSpell(Card* card);
-
-	#pragma endregion 
-
 	#pragma region Constructor & Destructor
 
 	/* The constructor for the derived spell class */
