@@ -2,9 +2,11 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
 #include <boost/algorithm/string.hpp>
+#include <vector>
 
 class Player;
 class Server;
+class Card;
 
 class Client
 	: public boost::enable_shared_from_this<Client>
@@ -34,9 +36,6 @@ public:
 	/* A flag to block on if this client is currently listening. */
 	bool Listening;
 
-	/* A flag to quickly check if this client is connected and available to be written too. */
-	bool Connected;
-
 	#pragma endregion
 
 	#pragma region Methods
@@ -53,8 +52,11 @@ public:
 	/* Writes the given string as a byte stream, accepts any size string. */
 	void Write(std::string data);
 
+	/* Format and print a string of cards based on their name */
+	void Write(std::vector<Card*> cards);
+
 	/* Method to be called when the connection closes, and handles it cleanly. */
-	void DoClose();
+	void HandleDisconnect();
 
 	/* Starts listening again after TurnListen died out. */
 	void StartListening();

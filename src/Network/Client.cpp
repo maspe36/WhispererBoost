@@ -25,12 +25,12 @@ void Client::Start(Server* server)
 {
 	// This is the server we are connected to in this client.
 	m_Server = server;
-
 	Write("Connected!");
 
-	boost::asio::async_read_until(Socket, Buffer, Delimeter, boost::bind(&Client::UserNameReceive, shared_from_this(), boost::asio::placeholders::error));
+	boost::asio::async_read_until(Socket, Buffer, Delimeter, 
+		boost::bind(&Client::UserNameReceive, shared_from_this(), 
+					boost::asio::placeholders::error));
 
-	Connected = true;
 	std::cout << "Listening for messages from client..." << std::endl;
 }
 
@@ -46,23 +46,36 @@ void Client::Write(std::string data)
 
 	boost::asio::async_write(Socket, boost::asio::buffer(data.c_str(), data.size()),
 		boost::bind(&Client::OnWrite, shared_from_this(),
-			boost::asio::placeholders::error,
-			boost::asio::placeholders::bytes_transferred));
+					boost::asio::placeholders::error,
+					boost::asio::placeholders::bytes_transferred));
 }
 
-void Client::DoClose()
+void Client::Write(vector<Card*> cards)
 {
-	Connected = false;
-	std::cout << "Lost connection to client!" << std::endl;
-	m_Player->CurrentGame->WriteToPlayers(m_Player->Name + " disconnected!");
+	std::string data = "";
+	for (auto card : cards)
+	{
+		data.append(card->Name + Delimeter);
+	}
+
+	Write(data);
+}
+
+void Client::HandleDisconnect()
+{
 	Socket.close();
+	std::cout << "Lost connection to client!" << std::endl;
+
+	m_Player->CurrentGame->WriteToPlayers(m_Player->Name + " disconnected!");
 }
 
 void Client::StartListening()
 {
 	m_Player->CurrentGame->StartTurn();
 	Listening = true;
-	boost::asio::async_read_until(Socket, Buffer, Delimeter, boost::bind(&Client::TurnListen, shared_from_this(), boost::asio::placeholders::error));
+	boost::asio::async_read_until(Socket, Buffer, Delimeter, 
+		boost::bind(&Client::TurnListen, shared_from_this(), 
+					boost::asio::placeholders::error));
 }
 
 std::string Client::GetString(boost::asio::streambuf& sbuffer)
@@ -90,11 +103,13 @@ void Client::UserNameReceive(const boost::system::error_code & errorCode)
 
 		m_Player = new Player(data, {}, shared_from_this());
 
-		boost::asio::async_read_until(Socket, Buffer, Delimeter, boost::bind(&Client::DeckReceive, shared_from_this(), boost::asio::placeholders::error));
+		boost::asio::async_read_until(Socket, Buffer, Delimeter, 
+			boost::bind(&Client::DeckReceive, shared_from_this(), 
+						boost::asio::placeholders::error));
 	}
 	else
 	{
-		DoClose();
+		HandleDisconnect();
 	}
 }
 
@@ -120,11 +135,14 @@ void Client::DeckReceive(const boost::system::error_code & errorCode)
 		m_Server->MatchQueue.push(m_Player);
 
 		std::cout << m_Player->Name << " is now in queue for a game!" << std::endl;
-		boost::asio::async_read_until(Socket, Buffer, Delimeter, boost::bind(&Client::MulliganRecieve, shared_from_this(), boost::asio::placeholders::error));
+
+		boost::asio::async_read_until(Socket, Buffer, Delimeter, 
+			boost::bind(&Client::MulliganRecieve, shared_from_this(), 
+						boost::asio::placeholders::error));
 	}
 	else
 	{
-		DoClose();
+		HandleDisconnect();
 	}
 }
 
@@ -145,7 +163,7 @@ void Client::MulliganRecieve(const boost::system::error_code & errorCode)
 	}
 	else
 	{
-		DoClose();
+		HandleDisconnect();
 	}
 }
 
@@ -165,7 +183,9 @@ void Client::TurnListen(const boost::system::error_code & errorCode)
 		if (data != "end")
 		{
 			// Handle the clients input for the game
-			boost::asio::async_read_until(Socket, Buffer, Delimeter, boost::bind(&Client::TurnListen, shared_from_this(), boost::asio::placeholders::error));
+			boost::asio::async_read_until(Socket, Buffer, Delimeter, 
+				boost::bind(&Client::TurnListen, shared_from_this(), 
+							boost::asio::placeholders::error));
 		}
 		else 
 		{
@@ -175,7 +195,7 @@ void Client::TurnListen(const boost::system::error_code & errorCode)
 	}
 	else
 	{
-		DoClose();
+		HandleDisconnect();
 	}
 }
 
