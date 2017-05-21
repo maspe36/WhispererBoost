@@ -30,10 +30,7 @@ void Game::MulliganState()
 
 	for (auto player : Players)
 	{
-		for (auto card : player->Hand)
-		{
-			player->m_Client->Write(card->Name + "\n");
-		}	
+		player->m_Client->Write(player->Hand);
 	}
 
 	int playersDone = 0;
@@ -110,26 +107,15 @@ void Game::AttackPlay(std::string attack)
 void Game::CardPlay(int index)
 {
 	Card* card = ActivePlayer->Hand.at(index);
-	CardOrder.push_back(card);
+
+	if (ActivePlayer->IsPlayable(card))
+	{
+		// Remove mana
+		ActivePlayer->PlayCard(card);
+	}
 	
-	// Check the derived type of the card object and play it in the appropriate area
-	if (Creature* creature = Creature::GetCreature(card))
-	{
-		card->Owner->Creatures.push_back(creature);
-	}
-	else if (Spell* spell = Spell::GetSpell(card))
-	{
-		card->Owner->Spells.push_back(spell);
-	}
-	else if (Constant* constant = Constant::GetConstant(card))
-	{
-		card->Owner->Constants.push_back(constant);
-	}
-
 	// The card was played, lets remove it from the active players hand
-	ActivePlayer->RemoveFromHand(card);
-
-	WriteToPlayers(card->Owner->Name + " played " + card->Name);
+	card->Owner->RemoveFromHand(card);
 }
 
 void Game::HandlePlay(string play)
@@ -213,7 +199,7 @@ void Game::WriteToPlayers(std::string data) const
 {
 	for (auto player : Players)
 	{
-		if (player->m_Client->Connected)
+		if (player->m_Client->GetSocket().is_open())
 		{
 			player->m_Client->Write(data);
 		}

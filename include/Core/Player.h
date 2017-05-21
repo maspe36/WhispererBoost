@@ -45,14 +45,14 @@ public:
 	/* A players graveyard */
 	vector<Card*> Graveyard;
 
+	/* A players constants in play */
+	vector<Constant*> Constants;
+
 	/* A players creatures in play */
 	vector<Creature*> Creatures;
 
 	/* A players spells in play */
 	vector<Spell*> Spells;
-
-	/* A players constants in play */
-	vector<Constant*> Constants;
 
 	/* The seed used to shuffle this players cards */
 	mt19937 Seed;

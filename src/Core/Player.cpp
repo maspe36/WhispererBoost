@@ -56,6 +56,8 @@ void Player::PlayCard(Card* card)
 	{
 		Spells.push_back(SpellCard);
 	}
+
+	CurrentGame->WriteToPlayers(Name + " played " + card->Name);
 }
 
 void Player::RemoveFromHand(Card * card)

@@ -76,6 +76,9 @@ public:
 	void AttackPlay(std::string attack);
 
 	/* Handle how to play a card */
+	void CardPlay(Card* card);
+
+	/* Handle a card played from the active players hand at the given index */
 	void CardPlay(int index);
 
 	/* Handles the the play given for the active player */
@@ -96,7 +99,7 @@ public:
 	/* Check if the game is over */
 	bool IsGameOver();
 
-	/* Write to only the players of this game */
+	/* Write to only the connected players in this game */
 	void WriteToPlayers(std::string data) const;
 
 	#pragma endregion
