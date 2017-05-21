@@ -66,7 +66,10 @@ void Client::HandleDisconnect()
 	Socket.close();
 	std::cout << "Lost connection to client!" << std::endl;
 
-	m_Player->CurrentGame->WriteToPlayers(m_Player->Name + " disconnected!");
+	if (m_Player != nullptr && m_Player->CurrentGame != nullptr)
+	{
+		m_Player->CurrentGame->WriteToPlayers(m_Player->Name + " disconnected!");
+	}	
 }
 
 void Client::StartListening()
