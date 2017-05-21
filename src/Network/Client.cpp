@@ -71,11 +71,13 @@ void Client::HandleDisconnect()
 
 void Client::StartListening()
 {
-	m_Player->CurrentGame->StartTurn();
 	Listening = true;
 	boost::asio::async_read_until(Socket, Buffer, Delimeter, 
 		boost::bind(&Client::TurnListen, shared_from_this(), 
 					boost::asio::placeholders::error));
+
+	m_Player->CurrentGame->StartTurn();
+	m_Player->CurrentGame->WriteGameStatus();
 }
 
 std::string Client::GetString(boost::asio::streambuf& sbuffer)

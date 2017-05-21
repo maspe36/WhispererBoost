@@ -65,16 +65,84 @@ void Player::RemoveFromHand(Card * card)
 	Hand.erase(remove(Hand.begin(), Hand.end(), card), Hand.end());
 }
 
+void Player::SubtractCost(Card* card)
+{
+	for (int i = 0; i < card->Cost.size(); i++)
+	{
+		Mana[i] -= card->Cost[i];
+	}
+}
+
 bool Player::IsPlayable(Card* card) const
 {
-	if (Mana >= card->Cost)
+	for (int i = 0; i < Mana.size(); i++)
 	{
-		return true;
+		if (card->Cost[i] > Mana[i])
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+std::string Player::GetStatus(bool sensitive)
+{
+	std::string status = "";
+
+	status.append(Name + ":\n");
+	status.append("Health: " + to_string(Health) + "\n");
+	status.append("Deck Size: " + to_string(Deck.size()) + "\n");
+
+	status.append("Available Mana:\n");
+	status.append("Black: " + to_string(Mana[0]) + "\n");
+	status.append("Blue: " + to_string(Mana[1]) + "\n");
+	status.append("Brown: " + to_string(Mana[2]) + "\n");
+	status.append("Green: " + to_string(Mana[3]) + "\n");
+	status.append("Red: " + to_string(Mana[4]) + "\n");
+	status.append("White: " + to_string(Mana[5]) + "\n");
+
+	status.append("Total Mana:\n");
+	status.append("Black: " + to_string(TotalMana[0]) + "\n");
+	status.append("Blue: " + to_string(TotalMana[1]) + "\n");
+	status.append("Brown: " + to_string(TotalMana[2]) + "\n");
+	status.append("Green: " + to_string(TotalMana[3]) + "\n");
+	status.append("Red: " + to_string(TotalMana[4]) + "\n");
+	status.append("White: " + to_string(TotalMana[5]) + "\n");
+
+	// Only give this players hand size if we are sending this to a different player
+	if (sensitive)
+	{
+		status.append("Hand: " + to_string(Hand.size()) + "\n");
 	}
 	else
 	{
-		return false;
+		status.append("Hand:\n");
+		for (auto card : Hand)
+		{
+			status.append(card->Name + "\n");
+		}
 	}
+	
+	status.append("Constants:\n");
+	for (auto card : Constants)
+	{
+		status.append(card->Name + "\n");
+	}
+
+	status.append("Creatures:\n");
+	for (auto card : Creatures)
+	{
+		status.append(card->Name + "\n");
+		status.append(to_string(card->Attack) + " : " + to_string(card->Defense) + "\n");
+	}
+
+	status.append("Graveyard:\n");
+	for (auto card : Graveyard)
+	{
+		status.append(card->Name + "\n");
+	}
+
+	return status;
 }
 
 Player::Player(string name, vector<Card*> deck, Client::pointer client)

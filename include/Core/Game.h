@@ -75,11 +75,8 @@ public:
 	/* Handle how an attack will go through */
 	void AttackPlay(std::string attack);
 
-	/* Handle how to play a card */
-	void CardPlay(Card* card);
-
 	/* Handle a card played from the active players hand at the given index */
-	void CardPlay(int index);
+	void CardPlay(int index) const;
 
 	/* Handles the the play given for the active player */
 	void HandlePlay(std::string play);
@@ -96,11 +93,14 @@ public:
 	/* Look at all the effects of cards in CardOrder and potentially trigger them */
 	static void CheckEffects(Action* action);
 
-	/* Check if the game is over */
-	bool IsGameOver();
-
 	/* Write to only the connected players in this game */
 	void WriteToPlayers(std::string data) const;
+	
+	/* Writes the game status to the clients */
+	void WriteGameStatus();
+
+	/* Check if the game is over */
+	bool IsGameOver();
 
 	#pragma endregion
 

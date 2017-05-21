@@ -85,8 +85,14 @@ public:
 	/* Removes the given card from this players hand */
 	void RemoveFromHand(Card* card);
 
+	/* Subtracts the cards cost from this players available mana */
+	void SubtractCost(Card * card);
+
 	/* Returns true if the card is playable */
 	bool IsPlayable(Card* card) const;
+
+	/* Returns a formatted string of the status of this player (Mana, cards in play, etc) */
+	std::string GetStatus(bool sensitive);
 
 	#pragma endregion
 

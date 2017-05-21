@@ -90,6 +90,7 @@ void Game::PlayState() const
 
 void Game::StartTurn() const
 {
+	ActivePlayer->RefillMana();
 	WriteToPlayers("It is " + ActivePlayer->Name + "'s turn");
 }
 
@@ -104,18 +105,18 @@ void Game::AttackPlay(std::string attack)
 	WriteToPlayers(ActivePlayer->Name + " attack: " + attack);
 }
 
-void Game::CardPlay(int index)
+void Game::CardPlay(int index) const
 {
 	Card* card = ActivePlayer->Hand.at(index);
 
 	if (ActivePlayer->IsPlayable(card))
 	{
-		// Remove mana
+		ActivePlayer->SubtractCost(card);
 		ActivePlayer->PlayCard(card);
 	}
 	
 	// The card was played, lets remove it from the active players hand
-	card->Owner->RemoveFromHand(card);
+	ActivePlayer->RemoveFromHand(card);
 }
 
 void Game::HandlePlay(string play)
@@ -144,6 +145,8 @@ void Game::HandlePlay(string play)
 
 		default: {};
 	}
+
+	WriteGameStatus();
 }
 
 void Game::ChangeActivePlayer()
@@ -175,6 +178,35 @@ void Game::CheckEffects(Action* action)
 {
 }
 
+void Game::WriteToPlayers(std::string data) const
+{
+	for (auto player : Players)
+	{
+		if (player->m_Client->GetSocket().is_open())
+		{
+			player->m_Client->Write(data);
+		}
+	}
+}
+
+void Game::WriteGameStatus()
+{
+	for (auto player : Players)
+	{
+		for (auto writePlayer : Players)
+		{
+			if (player == writePlayer)
+			{
+				player->m_Client->Write(writePlayer->GetStatus(false));
+			}
+			else
+			{
+				player->m_Client->Write(writePlayer->GetStatus(true));
+			}
+		}
+	}
+}
+
 bool Game::IsGameOver()
 {
 	int aliveCounter = 0;
@@ -195,19 +227,8 @@ bool Game::IsGameOver()
 	return false;
 }
 
-void Game::WriteToPlayers(std::string data) const
-{
-	for (auto player : Players)
-	{
-		if (player->m_Client->GetSocket().is_open())
-		{
-			player->m_Client->Write(data);
-		}
-	}
-}
-
 Game::Game(vector<Player*> players, Server* server)
-	: PLAYER_HEALTH(30), PLAYER_MANA(1), Players(players), ActivePlayer(players.at(0)), ActiveIndex(0), m_Server(server)
+	: PLAYER_HEALTH(30), PLAYER_MANA({1,1,1,1,1,1}), Players(players), ActivePlayer(players.at(0)), ActiveIndex(0), m_Server(server)
 {
 	cout << "Game created, initializing game settings..." << endl;
 
