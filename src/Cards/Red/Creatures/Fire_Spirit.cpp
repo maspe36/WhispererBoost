@@ -4,7 +4,7 @@
 REGISTER_CLASS("Fire Spirit", Fire_Spirit)
 
 Fire_Spirit::Fire_Spirit()
-	: Creature({ 0,0,1,0,0,0 }, "Fire Spirit", "A lonely spirit born from the inferno.", ColorVariants::Red, TypeVariants::Creature, { MechanicVariants::None }, 2, 1)
+	: Creature({ 0,0,0,0,1,0 }, "Fire Spirit", "A lonely spirit born from the inferno.", ColorVariants::Red, TypeVariants::Creature, { MechanicVariants::None }, 2, 1)
 {
 }
 

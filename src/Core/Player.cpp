@@ -22,9 +22,7 @@ void Player::Draw(int amount)
 {
 	for (int i = 0; i < amount; i++)
 	{
-		Card* temp = Deck.front();
-		Deck.erase(Deck.begin());
-		Hand.push_back(temp);
+		Draw();
 	}
 }
 
@@ -73,6 +71,11 @@ void Player::SubtractCost(Card* card)
 	}
 }
 
+void Player::AddMana(Card* card)
+{
+	TotalMana[static_cast<int>(card->Color)] += 1;
+}
+
 bool Player::IsPlayable(Card* card) const
 {
 	for (int i = 0; i < Mana.size(); i++)
@@ -94,20 +97,20 @@ std::string Player::GetStatus(bool sensitive)
 	status.append("Deck Size: " + to_string(Deck.size()) + "\n");
 
 	status.append("Available Mana:\n");
-	status.append("Black: " + to_string(Mana[0]) + "\n");
-	status.append("Blue: " + to_string(Mana[1]) + "\n");
-	status.append("Brown: " + to_string(Mana[2]) + "\n");
-	status.append("Green: " + to_string(Mana[3]) + "\n");
-	status.append("Red: " + to_string(Mana[4]) + "\n");
-	status.append("White: " + to_string(Mana[5]) + "\n");
+	status.append("Black: " + to_string(Mana[static_cast<int>(Card::ColorVariants::Black)]) + "\n");
+	status.append("Blue: " + to_string(Mana[static_cast<int>(Card::ColorVariants::Blue)]) + "\n");
+	status.append("Brown: " + to_string(Mana[static_cast<int>(Card::ColorVariants::Brown)]) + "\n");
+	status.append("Green: " + to_string(Mana[static_cast<int>(Card::ColorVariants::Green)]) + "\n");
+	status.append("Red: " + to_string(Mana[static_cast<int>(Card::ColorVariants::Red)]) + "\n");
+	status.append("White: " + to_string(Mana[static_cast<int>(Card::ColorVariants::White)]) + "\n");
 
 	status.append("Total Mana:\n");
-	status.append("Black: " + to_string(TotalMana[0]) + "\n");
-	status.append("Blue: " + to_string(TotalMana[1]) + "\n");
-	status.append("Brown: " + to_string(TotalMana[2]) + "\n");
-	status.append("Green: " + to_string(TotalMana[3]) + "\n");
-	status.append("Red: " + to_string(TotalMana[4]) + "\n");
-	status.append("White: " + to_string(TotalMana[5]) + "\n");
+	status.append("Black: " + to_string(TotalMana[static_cast<int>(Card::ColorVariants::Black)]) + "\n");
+	status.append("Blue: " + to_string(TotalMana[static_cast<int>(Card::ColorVariants::Blue)]) + "\n");
+	status.append("Brown: " + to_string(TotalMana[static_cast<int>(Card::ColorVariants::Brown)]) + "\n");
+	status.append("Green: " + to_string(TotalMana[static_cast<int>(Card::ColorVariants::Green)]) + "\n");
+	status.append("Red: " + to_string(TotalMana[static_cast<int>(Card::ColorVariants::Red)]) + "\n");
+	status.append("White: " + to_string(TotalMana[static_cast<int>(Card::ColorVariants::White)]) + "\n");
 
 	// Only give this players hand size if we are sending this to a different player
 	if (sensitive)
@@ -141,6 +144,8 @@ std::string Player::GetStatus(bool sensitive)
 	{
 		status.append(card->Name + "\n");
 	}
+
+	status.append("-----------------------------------\n");
 
 	return status;
 }

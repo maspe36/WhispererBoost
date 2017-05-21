@@ -2,9 +2,6 @@
 
 #include "Core/Player.h"
 #include "Network/Server.h"
-#include "Core/Derived/Constant.h"
-#include "Core/Derived/Creature.h"
-#include "Core/Derived/Spell.h"
 
 #include <thread>
 #include "boost/thread.hpp"
@@ -76,8 +73,11 @@ void Game::MulliganLoop(int done, vector<Player*> players) const
 	}
 }
 
-void Game::PlayState() const
+void Game::PlayState()
 {
+	// Write the status one time when the game starts
+	WriteGameStatus();
+
 	// Listen for messages from the correct client
 	while (true)
 	{
@@ -91,6 +91,7 @@ void Game::PlayState() const
 void Game::StartTurn() const
 {
 	ActivePlayer->RefillMana();
+	ActivePlayer->Draw();
 	WriteToPlayers("It is " + ActivePlayer->Name + "'s turn");
 }
 
@@ -107,16 +108,27 @@ void Game::AttackPlay(std::string attack)
 
 void Game::CardPlay(int index) const
 {
-	Card* card = ActivePlayer->Hand.at(index);
+	Card* card = nullptr;
 
-	if (ActivePlayer->IsPlayable(card))
+	try
 	{
-		ActivePlayer->SubtractCost(card);
-		ActivePlayer->PlayCard(card);
+		card = ActivePlayer->Hand.at(index);
 	}
-	
-	// The card was played, lets remove it from the active players hand
-	ActivePlayer->RemoveFromHand(card);
+	catch (exception e)
+	{
+		std::cout << ActivePlayer->Name << " attempted to play a card out of range from their hand" << std::endl;
+	}
+
+	if (card != nullptr)
+	{
+		if (ActivePlayer->IsPlayable(card))
+		{
+			ActivePlayer->SubtractCost(card);
+			ActivePlayer->PlayCard(card);
+			ActivePlayer->AddMana(card);
+			ActivePlayer->RemoveFromHand(card);
+		}
+	}
 }
 
 void Game::HandlePlay(string play)

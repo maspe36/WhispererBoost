@@ -64,7 +64,7 @@ public:
 	void MulliganLoop(int done, vector<Player*> players) const;
 
 	/* Listens for the active players actions (play cards, attack, etc)  */
-	void PlayState() const;
+	void PlayState();
 
 	/* Do things at the start of the active players turn */
 	void StartTurn() const;

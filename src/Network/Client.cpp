@@ -72,12 +72,10 @@ void Client::HandleDisconnect()
 void Client::StartListening()
 {
 	Listening = true;
+	m_Player->CurrentGame->StartTurn();
 	boost::asio::async_read_until(Socket, Buffer, Delimeter, 
 		boost::bind(&Client::TurnListen, shared_from_this(), 
 					boost::asio::placeholders::error));
-
-	m_Player->CurrentGame->StartTurn();
-	m_Player->CurrentGame->WriteGameStatus();
 }
 
 std::string Client::GetString(boost::asio::streambuf& sbuffer)
@@ -94,7 +92,7 @@ std::string Client::GetString(boost::asio::streambuf& sbuffer)
 void Client::UserNameReceive(const boost::system::error_code & errorCode)
 {
 	/* Create this clients equivlent player */
-	if (errorCode == nullptr)
+	if (errorCode == nullptr) 
 	{
 		std::string data = GetString(Buffer);
 
@@ -182,7 +180,8 @@ void Client::TurnListen(const boost::system::error_code & errorCode)
 		m_Player->CurrentGame->HandlePlay(data);
 
 		// The client wants to end their turn, stop calling this method recursivly and just let it end
-		if (data != "end")
+		std::string end (1, Game::END_PROTOCOL);
+		if (data != end)
 		{
 			// Handle the clients input for the game
 			boost::asio::async_read_until(Socket, Buffer, Delimeter, 

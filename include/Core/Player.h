@@ -88,6 +88,9 @@ public:
 	/* Subtracts the cards cost from this players available mana */
 	void SubtractCost(Card * card);
 
+	/* Adds the given cards color to the total mana */
+	void AddMana(Card* card);
+
 	/* Returns true if the card is playable */
 	bool IsPlayable(Card* card) const;
 
