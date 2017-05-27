@@ -25,7 +25,32 @@ public:
 	/* A creatures current defense */
 	int Defense;
 
+	/* The "summoning sickness" of a creature. By default this is 1 */
+	int Stasis;
+
+	/* The number of attacks this creature has left this turn */
+	int Flurry;
+
+	/* The maximum number of attacks this creature can make per turn */
+	int OriginalFlurry;
+
+	/* A flag to determine if this creature can attack */
+	bool CanAttack;
+
 	#pragma endregion
+
+	#pragma region Methods
+
+	/* Attack a creature */
+	void Attacking(Creature* creature);
+
+	/* Attack a player */
+	void Attacking(Player* player) const;
+
+	/* Return true if this card is dead */
+	bool IsDead() const;
+
+	#pragma endregion 
 
 	#pragma region Constructor & Destructor
 

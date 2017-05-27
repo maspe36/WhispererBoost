@@ -94,6 +94,9 @@ public:
 	/* Returns true if the card is playable */
 	bool IsPlayable(Card* card) const;
 
+	/* Return true if this player is dead */
+	bool IsDead() const;
+
 	/* Returns a formatted string of the status of this player (Mana, cards in play, etc) */
 	std::string GetStatus(bool sensitive);
 

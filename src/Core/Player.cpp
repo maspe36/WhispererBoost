@@ -88,6 +88,21 @@ bool Player::IsPlayable(Card* card) const
 	return true;
 }
 
+bool Player::IsDead() const
+{
+	if (Health <= 0)
+	{
+		return true;
+	}
+	
+	if (!Alive)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 std::string Player::GetStatus(bool sensitive)
 {
 	std::string status = "";
