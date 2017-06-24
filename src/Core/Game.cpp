@@ -189,10 +189,79 @@ void Game::ChangeActivePlayer()
 
 void Game::ClearDeadCards()
 {
+	for (auto player : Players) 
+	{
+		// Remove dead constants
+		player->Constants.erase(
+			remove_if(player->Constants.begin(), player->Constants.end(), IsDeadHandler),
+			player->Constants.end());
+
+		// Remove dead creatures
+		player->Creatures.erase(
+			remove_if(player->Creatures.begin(), player->Creatures.end(), IsDeadHandler),
+			player->Creatures.end());
+
+		// Remove dead spells
+		player->Spells.erase(
+			remove_if(player->Spells.begin(), player->Spells.end(), IsDeadHandler),
+			player->Spells.end());
+	}
+
+	// Remove any cards from the card order
+	CardOrder.erase(
+		remove_if(CardOrder.begin(), CardOrder.end(), IsDead),
+		CardOrder.end());
+
+	// Now do a check to see if we need to recursively call this method
+	// Things like downfall effects can trigger this case
+	for (auto player : Players) 
+	{	
+		// Check for dead creatures
+		for (auto creature : player->Creatures)
+		{
+			if (!creature->Alive) 
+			{
+				ClearDeadCards();
+			}
+		}
+
+		// Check for dead constants
+		for (auto constant : player->Constants)
+		{
+			if (!constant->Alive)
+			{
+				ClearDeadCards();
+			}
+		}
+
+		// All spells should be resolved at this point, so don't check for them.
+	}
 }
 
-void Game::ClearDeadPlayers()
+/* Internal method, if a card is dead, 
+handle the result (adding to the graveyard, checking effects, etc).
+Used for the remove_if's in ClearDeadCards() */
+bool IsDeadHandler(Card* card) 
 {
+	if (card->Alive) 
+	{
+		return false;
+	}
+	// Put the card in the graveyard
+	card->Owner->Graveyard.push_back(card);
+	return true;
+}
+
+/* Internal wrapper method, just check if a given card is dead. 
+Used for the remove_if's in ClearDeadCards() */
+bool IsDead(Card* card) 
+{
+	if (card->Alive)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void Game::CheckEffects(Action* action)

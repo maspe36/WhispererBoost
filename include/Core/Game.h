@@ -88,10 +88,7 @@ public:
 	void ChangeActivePlayer();
 
 	/* Sweep and clear all dead cards in the game */
-	static void ClearDeadCards();
-
-	/* Sweep and clear all dead players in the game */
-	static void ClearDeadPlayers();
+	void ClearDeadCards();
 
 	/* Look at all the effects of cards in CardOrder and potentially trigger them */
 	static void CheckEffects(Action* action);
