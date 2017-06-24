@@ -1,6 +1,9 @@
 #include "../include/Core/Game.h"
 
 #include "Core/Player.h"
+#include "Core/Card.h"
+#include "Core/Derived/Creature.h"
+#include "Core/Derived/Constant.h"
 #include "Network/Server.h"
 
 #include <thread>
@@ -103,6 +106,12 @@ void Game::EndTurn()
 
 void Game::AttackPlay(std::string attack)
 {
+	// TODO: How do we want to handle this? C<index> / C<index>P<name>?
+	if (attack.at(0) == PLAYER_PROTOCOL)
+	{
+		
+	}
+
 	WriteToPlayers(ActivePlayer->Name + " attack: " + attack);
 }
 
@@ -209,10 +218,13 @@ void Game::WriteGameStatus()
 		{
 			if (player == writePlayer)
 			{
+				// This player should get sent sensitve information.
+				// For example hand contents instead of count.
 				player->m_Client->Write(writePlayer->GetStatus(false));
 			}
 			else
 			{
+				// This player should not be sent sensitive information.
 				player->m_Client->Write(writePlayer->GetStatus(true));
 			}
 		}

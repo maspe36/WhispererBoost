@@ -28,6 +28,9 @@ public:
 	/* The character that signifies a user ending their turn */
 	const static char END_PROTOCOL = 'e';
 
+	/* The character that signifies a player */
+	const static char PLAYER_PROTOCOL = 'p';
+
 	#pragma endregion
 
 	#pragma region InstanceVars
