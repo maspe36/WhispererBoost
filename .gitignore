@@ -11,3 +11,4 @@ WhispererTCG.vcxproj.user
 CMakeLists.txt
 *.lib
 *.log
+project-cache.jam
