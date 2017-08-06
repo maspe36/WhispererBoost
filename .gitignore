@@ -9,3 +9,4 @@ WhispererTCG.vcxproj
 WhispererTCG.vcxproj.filters
 WhispererTCG.vcxproj.user
 CMakeLists.txt
+*.lib
