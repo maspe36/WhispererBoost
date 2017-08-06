@@ -2,7 +2,7 @@
 #include <vector>
 #include <random>
 
-#include "Network/Client.h"
+#include "../../../include/Network/Client.h"
 
 using namespace std;
 
@@ -68,7 +68,7 @@ public:
 	#pragma region Methods
 	
 	/* Draw a card from the players deck */
-	void Draw();
+	void DrawCard();
 
 	/* Draw given number of cards from the players deck */
 	void Draw(int amount);

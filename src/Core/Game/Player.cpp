@@ -1,17 +1,20 @@
-#include "../include/Core/Player.h"
+#define BOOST_PYTHON_STATIC_LIB
+#include "../../../include/Core/Game/Player.h"
+#include "../../../include/Core/Game/Game.h"
+#include "../../../include/Core/Game/Card.h"
+#include "../../../include/Core/Derived/Constant.h"
+#include "../../../include/Core/Derived/Creature.h"
+#include "../../../include/Core/Derived/Spell.h"
+#include "../../../include/Network/Client.h"
 
-#include "Core/Card.h"
-#include "Core/Derived/Constant.h"
-#include "Core/Derived/Creature.h"
-#include "Core/Derived/Spell.h"
-#include "Core/Game.h"
-
-#include "Network/Client.h"
+#include <boost/bind/bind.hpp>
+#include <boost/python.hpp>
 
 #include <algorithm>
 #include <random>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
-void Player::Draw()
+void Player::DrawCard()
 {
 	Card* temp = Deck.front();
 	Deck.erase(Deck.begin());
@@ -22,7 +25,7 @@ void Player::Draw(int amount)
 {
 	for (int i = 0; i < amount; i++)
 	{
-		Draw();
+		DrawCard();
 	}
 }
 
@@ -177,4 +180,47 @@ Player::Player(string name, vector<Card*> deck, Client::pointer client)
 
 Player::~Player()
 {
+}
+
+BOOST_PYTHON_MODULE(Player)
+{
+	using namespace boost::python;
+
+	typedef vector<int> vectorInt;
+	typedef vector<Card*> vectorCard;
+	typedef vector<Creature*> vectorCreature;
+	typedef vector<Constant*> vectorConstant;
+	typedef vector<Spell*> vectorSpell;
+	
+	class_<vectorInt>("vectorInt")
+		.def(vector_indexing_suite<vectorInt>());
+	class_<vectorCard>("vectorCard")
+		.def(vector_indexing_suite<vectorCard>());
+	class_<vectorCreature>("vectorCreature")
+		.def(vector_indexing_suite<vectorCreature>());
+	class_<vectorConstant>("vectorConstant")
+		.def(vector_indexing_suite<vectorConstant>());
+	class_<vectorSpell>("vectorSpell")
+		.def(vector_indexing_suite<vectorSpell>());
+
+	class_<Player>("Player", no_init)
+		.def_readwrite("Name", &Player::Name)
+		.def_readwrite("Health", &Player::Health)
+		.def_readwrite("Mana", &Player::Mana)
+		.def_readwrite("Alive", &Player::Alive)
+		.def_readwrite("Hand", &Player::Hand)
+		.def_readwrite("Mulligan", &Player::Mulligan)
+		.def_readwrite("Deck", &Player::Deck)
+		.def_readwrite("Graveyard", &Player::Graveyard)
+		.def_readwrite("Constants", &Player::Constants)
+		.def_readwrite("Creatures", &Player::Creatures)
+		.def_readwrite("Spells", &Player::Spells)
+		.def_readwrite("CurrentGame", &Player::CurrentGame)
+		.def_readwrite("m_Client", &Player::m_Client)
+		.def_readwrite("Deck", &Player::Deck)
+		.def("DrawCard", &Player::DrawCard)
+		.def("Draw", &Player::Draw)
+		.def("PlayCard", &Player::PlayCard)
+		.def("RemoveFromHand", &Player::RemoveFromHand)
+		.def("IsDead", &Player::IsDead);
 }

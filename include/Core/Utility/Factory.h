@@ -1,9 +1,10 @@
 #pragma once
-#include "Card.h"
+#include "../Game/Card.h"
 #include "boost/function.hpp"
 
 #include <map>
 #include <functional>
+
 
 using namespace std;
 

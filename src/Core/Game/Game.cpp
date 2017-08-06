@@ -1,13 +1,54 @@
-#include "../include/Core/Game.h"
-
-#include "Core/Player.h"
-#include "Core/Card.h"
-#include "Core/Derived/Creature.h"
-#include "Core/Derived/Constant.h"
-#include "Network/Server.h"
+#define BOOST_PYTHON_STATIC_LIB
+#include "../../../include/Core/Game/Game.h"
+#include "../../../include/Core/Game/Player.h"
+#include "../../../include/Core/Game/Card.h"
+#include "../../../include/Core/Derived/Creature.h"
+#include "../../../include/Core/Derived/Constant.h"
+#include "../../../include/Core/Derived/Spell.h"
+#include "../../../include/Core/Utility/Action.h"
+#include "../../../include/Network/Server.h"
 
 #include <thread>
 #include "boost/thread.hpp"
+#include <boost/python.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+
+
+bool isCharPresent(std::string &data, char c)
+{
+	std::size_t found = data.find(c);
+	if (found != std::string::npos)
+	{
+		return true;
+	}
+	return false;
+}
+
+/* Internal method, if a card is dead,
+handle the result (adding to the graveyard, checking effects, etc).
+Used for the remove_if's in ClearDeadCards() */
+bool IsDeadHandler(Card* card)
+{
+	if (card->Alive)
+	{
+		return false;
+	}
+	// Put the card in the graveyard
+	card->Owner->Graveyard.push_back(card);
+	return true;
+}
+
+/* Internal wrapper method, just check if a given card is dead.
+Used for the remove_if's in ClearDeadCards() */
+bool IsDead(Card* card)
+{
+	if (card->Alive)
+	{
+		return false;
+	}
+
+	return true;
+}
 
 void Game::Start()
 {
@@ -94,7 +135,7 @@ void Game::PlayState()
 void Game::StartTurn() const
 {
 	ActivePlayer->RefillMana();
-	ActivePlayer->Draw();
+	ActivePlayer->DrawCard();
 	WriteToPlayers("It is " + ActivePlayer->Name + "'s turn");
 }
 
@@ -106,11 +147,7 @@ void Game::EndTurn()
 
 void Game::AttackPlay(std::string attack)
 {
-	// TODO: How do we want to handle this? C<index> / C<index>P<name>?
-	if (attack.at(0) == PLAYER_PROTOCOL)
-	{
-		
-	}
+	// TODO: Use <p><c><p>?<c>
 
 	WriteToPlayers(ActivePlayer->Name + " attack: " + attack);
 }
@@ -238,32 +275,6 @@ void Game::ClearDeadCards()
 	}
 }
 
-/* Internal method, if a card is dead, 
-handle the result (adding to the graveyard, checking effects, etc).
-Used for the remove_if's in ClearDeadCards() */
-bool IsDeadHandler(Card* card) 
-{
-	if (card->Alive) 
-	{
-		return false;
-	}
-	// Put the card in the graveyard
-	card->Owner->Graveyard.push_back(card);
-	return true;
-}
-
-/* Internal wrapper method, just check if a given card is dead. 
-Used for the remove_if's in ClearDeadCards() */
-bool IsDead(Card* card) 
-{
-	if (card->Alive)
-	{
-		return false;
-	}
-
-	return true;
-}
-
 void Game::CheckEffects(Action* action)
 {
 }
@@ -347,7 +358,37 @@ Game::~Game()
 
 std::string Game::GetAfterChar(std::string data, char splitter)
 {
-	std::string substring = data.substr(data.find(splitter) + 1);
-	return substring;
+	if (isCharPresent(data, splitter)) 
+	{
+		std::string substring = data.substr(data.find(splitter) + 1);
+		return substring;
+	}
+	else
+	{
+		return "";
+	}
 }
 
+BOOST_PYTHON_MODULE(Game)
+{
+	using namespace boost::python;
+	
+	typedef vector<Player*> vetorPlayer;
+	typedef vector<Card*> vectorCard;
+	typedef vector<Action*> vectorAction;
+	
+	class_<vetorPlayer>("vetorPlayer")
+		.def(vector_indexing_suite<vetorPlayer>());
+	class_<vectorCard>("vectorCard")
+		.def(vector_indexing_suite<vectorCard>());
+	class_<vectorAction>("vectorAction")
+		.def(vector_indexing_suite<vectorAction>());
+	
+	class_<Game>("Game", no_init)
+		.def_readwrite("Players", &Game::Players)
+		.def_readwrite("CardOrder", &Game::CardOrder)
+		.def_readwrite("History", &Game::History)
+		.def_readwrite("ActivePlayer", &Game::ActivePlayer)
+		.def_readwrite("ActiveIndex", &Game::ActiveIndex);
+
+}

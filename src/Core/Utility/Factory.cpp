@@ -1,4 +1,4 @@
-#include "Core/Factory.h"
+#include "../../../include/Core/Utility/Factory.h"
 
 Registrar::Registrar(string name, boost::function<Card*()> classFactoryFunction)
 {
