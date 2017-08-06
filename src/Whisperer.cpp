@@ -1,6 +1,6 @@
-#include "Core/Game.h"
-#include "Core/Player.h"
-#include "Network/Server.h"
+#include "../include/Core/Game/Game.h"
+#include "../include/Core/Game/Player.h"
+#include "../include/Network/Server.h"
 
 #include <string>
 #include "boost/thread.hpp"

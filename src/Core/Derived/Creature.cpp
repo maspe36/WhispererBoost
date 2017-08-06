@@ -1,5 +1,5 @@
-#include "Core/Derived/Creature.h"
-#include "Core/Player.h"
+#include "../../include/Core/Derived/Creature.h"
+#include "../../include/Core/Game/Player.h"
 
 void Creature::Attacking(Creature* creature)
 {

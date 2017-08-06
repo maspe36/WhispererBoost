@@ -1,13 +1,14 @@
-#include "../include/Network/Client.h"
-
-#include "Core/Game.h"
-#include "Core/Player.h"
-#include "Core/Card.h"
-#include "Network/Server.h"
+#define BOOST_PYTHON_STATIC_LIB
+#include "../../include/Core/Game/Game.h"
+#include "../../include/Core/Game/Player.h"
+#include "../../include/Core/Game/Card.h"
+#include "../../include/Network/Client.h"
+#include "../../include/Network/Server.h"
+#include "../../include/Core/Utility/Factory.h"
 
 #include <iostream>
 #include <boost/bind/bind.hpp>
-#include "Core/Factory.h"
+#include <boost/python.hpp>
 
 typedef boost::shared_ptr<Client> pointer;
 
@@ -130,7 +131,7 @@ void Client::DeckReceive(const boost::system::error_code & errorCode)
 
 		std::vector<Card*> cards;
 
-		Factory::FillDeck(cards, data, ",");
+		//Factory::FillDeck(cards, data, ",");
 
 		m_Player->Deck = cards;
 
@@ -210,4 +211,13 @@ void Client::OnWrite(const boost::system::error_code & errorCode, size_t bytesTr
 Client::Client(boost::asio::io_service & ioService)
 	: m_Player(nullptr), m_Server(nullptr), Listening(false), Socket(ioService)
 {
+}
+
+BOOST_PYTHON_MODULE(Client)
+{
+	using namespace boost::python;
+
+	void (Client::*Write)(std::string data) = &Client::Write;
+	class_<std::shared_ptr<Client>>("Client", no_init)
+		.def("Write", Write);
 }

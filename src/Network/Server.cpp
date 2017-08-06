@@ -1,6 +1,6 @@
-#include "../include/Network/Server.h"
+#include "../../include/Network/Server.h"
 
-#include "Core/Player.h"
+#include "../../include/Core/Game/Player.h"
 
 #include <iostream>
 #include <boost/bind/bind.hpp>

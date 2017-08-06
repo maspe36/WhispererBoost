@@ -1,5 +1,5 @@
 #pragma once
-#include "../include/Core/Card.h"
+#include "../Game/Card.h"
 
 class Constant :
 	public Card
