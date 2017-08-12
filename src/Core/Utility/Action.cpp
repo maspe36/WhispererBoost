@@ -77,5 +77,5 @@ BOOST_PYTHON_MODULE(Action)
 		.value("TurnStart", Action::ActionTypeVariants::TurnStart)
 		.value("TurnEnd", Action::ActionTypeVariants::TurnEnd);
 
-	class_<Action, boost::noncopyable>("Action", init<vectorCard, vectorPlayer, Creature*, Creature*, Player*, Player*, Action::ActionTypeVariants>());
+	class_<Action>("Action", init<vectorCard, vectorPlayer, Creature*, Creature*, Player*, Player*, Action::ActionTypeVariants>());
 }
