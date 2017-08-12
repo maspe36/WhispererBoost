@@ -14,6 +14,7 @@
 #include <random>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
+
 void Player::DrawCard()
 {
 	Card* temp = Deck.front();

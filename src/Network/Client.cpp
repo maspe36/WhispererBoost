@@ -10,7 +10,9 @@
 #include <boost/bind/bind.hpp>
 #include <boost/python.hpp>
 
+
 typedef boost::shared_ptr<Client> pointer;
+
 
 pointer Client::Create(boost::asio::io_service & ioService)
 {
