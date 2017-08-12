@@ -4,11 +4,12 @@ x86/
 x64/
 Debug/
 cmake-build-debug/
+*.lib
+*.log
+*.pyc
 packages.config
 WhispererTCG.vcxproj
 WhispererTCG.vcxproj.filters
 WhispererTCG.vcxproj.user
 CMakeLists.txt
-*.lib
-*.log
 project-cache.jam
