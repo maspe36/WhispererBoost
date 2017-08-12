@@ -88,7 +88,7 @@ public:
 	#pragma region Constructor & Destructor
 
 	/* Constructs the card */
-	Card(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics);
+	Card(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics, Player* owner);
 
 	/* Deconstructor for the card */
 	virtual ~Card();

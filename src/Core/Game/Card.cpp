@@ -1,16 +1,18 @@
 #define BOOST_PYTHON_STATIC_LIB
 #include "../../../include/Core/Game/Card.h"
+#include "../../../include/Core/Game/Player.h"
 
 #include <boost/bind/bind.hpp>
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
+
 void Card::Effect()
 {
 }
 
-Card::Card(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics)
-	: Cost(cost), Name(name), Text(text), Color(color), Type(type), Mechanics(mechanics), Alive(true), Owner(nullptr)
+Card::Card(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics, Player* owner)
+	: Cost(cost), Name(name), Text(text), Color(color), Type(type), Mechanics(mechanics), Alive(true), Owner(owner)
 {
 }
 
@@ -59,7 +61,7 @@ BOOST_PYTHON_MODULE(Card)
 		.value("TurnEnd", Card::MechanicVariants::TurnEnd)
 		.value("TurnStart", Card::MechanicVariants::TurnStart);
 
-	class_<Card>("Card", init<vectorInt, string, string, Card::ColorVariants, Card::TypeVariants, vectorMecanics>())
+	class_<Card>("Card", init<vectorInt, string, string, Card::ColorVariants, Card::TypeVariants, vectorMecanics, Player*>())
 		.def_readwrite("Cost", &Card::Cost)
 		.def_readwrite("Name", &Card::Name)
 		.def_readwrite("Text", &Card::Text)
