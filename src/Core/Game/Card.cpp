@@ -1,19 +1,43 @@
 #define BOOST_PYTHON_STATIC_LIB
 #include "../../../include/Core/Game/Card.h"
 #include "../../../include/Core/Game/Player.h"
+#include "../../../include/Core/Utility/Action.h"
 
-#include <boost/bind/bind.hpp>
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+
+using namespace boost::python;
+
+typedef vector<int> vectorInt;
+typedef vector<Card::MechanicVariants> vectorMecanics;
 
 
 void Card::Effect()
 {
+	pyCard.attr("Effect")();
+}
+
+void Card::IsEffectTriggered(Action action)
+{
+	pyCard.attr("IsEffectTriggered")(action);
 }
 
 Card::Card(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics, Player* owner)
-	: Cost(cost), Name(name), Text(text), Color(color), Type(type), Mechanics(mechanics), Alive(true), Owner(owner)
+	: Cost(cost), Name(name), Text(text), Color(color), Type(type), Mechanics(mechanics), Alive(true), Owner(owner), pyCard(nullptr)
 {
+}
+
+Card::Card(boost::python::object card)
+	: pyCard(card)
+{
+	Cost = extract< vectorInt >(pyCard.attr("Cost"));
+	Name = extract< string >(pyCard.attr("Name"));
+	Text = extract< string >(pyCard.attr("Text"));
+	Color = extract< ColorVariants >(pyCard.attr("Color"));
+	Type = extract< TypeVariants >(pyCard.attr("Type"));
+	Mechanics = extract< vectorMecanics >(pyCard.attr("Mechanics"));
+	Alive = extract< bool >(pyCard.attr("Alive"));
+	Owner = extract< Player* >(pyCard.attr("Owner"));
 }
 
 Card::~Card()
@@ -22,11 +46,6 @@ Card::~Card()
 
 BOOST_PYTHON_MODULE(Card)
 {
-	using namespace boost::python;
-
-	typedef vector<int> vectorInt;
-	typedef vector<Card::MechanicVariants> vectorMecanics;
-
 	class_<vectorInt>("vectorInt")
 		.def(vector_indexing_suite<vectorInt>());
 	class_<vectorMecanics>("vectorMecanics")

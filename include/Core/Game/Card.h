@@ -1,9 +1,14 @@
 #pragma once
+#define BOOST_PYTHON_STATIC_LIB
+
 #include <vector>
+#include <boost/python.hpp>
 
 using namespace std;
+using namespace boost::python;
 
 class Player;
+class Action;
 
 class Card
 {
@@ -76,6 +81,9 @@ public:
 	/* The player that owns this card */
 	Player* Owner;
 
+	/* A python card object */
+	object pyCard;
+
 	#pragma endregion
 
 	#pragma region Virtual Methods
@@ -83,12 +91,18 @@ public:
 	/* Triggers the cards effect */
 	virtual void Effect();
 
+	/* Checks if the effect should be triggered */
+	virtual void IsEffectTriggered(Action action);
+
 	#pragma endregion
 
 	#pragma region Constructor & Destructor
 
 	/* Constructs the card */
 	Card(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics, Player* owner);
+
+	/* Delegation constructor */
+	explicit Card(object card);
 
 	/* Deconstructor for the card */
 	virtual ~Card();
