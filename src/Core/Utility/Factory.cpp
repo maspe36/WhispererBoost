@@ -1,65 +1,76 @@
+#define BOOST_PYTHON_STATIC_LIB
 #include "../../../include/Core/Utility/Factory.h"
+#include "../../../include/Core/Game/Card.h"
 
-Registrar::Registrar(string name, boost::function<Card*()> classFactoryFunction)
+#include <string>
+#include <sstream>
+#include <vector>
+#include <iterator>
+
+#include <boost/python.hpp>
+
+using namespace boost::python;
+
+template<typename Out>
+void split(const std::string &data, char delim, Out result)
 {
-	// Register the class factory function
-	Factory::Instance()->RegisterFactoryFunction(name, classFactoryFunction);
-}
+	std::stringstream stringStream;
+	stringStream.str(data);
+	std::string item;
 
-
-Factory * Factory::Instance()
-{
-	static Factory factory;
-	return &factory;
-}
-
-void Factory::RegisterFactoryFunction(string name, boost::function<Card*()> classFactoryFunction)
-{
-	factoryFunctionRegistry[name] = classFactoryFunction;
-}
-
-Card* Factory::Create(string name)
-{
-	Card* instance = nullptr;
-
-	// Find name in the registry and call the associated method
-	auto it = factoryFunctionRegistry.find(name);
-	if (it != factoryFunctionRegistry.end())
+	while (std::getline(stringStream, item, delim))
 	{
-		instance = it->second();
-	}
-		
-	// Returns a nullptr if the associated method could not be found
-	return instance;
-}
-
-void Factory::FillDeck(vector<Card*>& deck, std::string decklist, std::string delimeter)
-{
-	vector<std::string> cardlist = Split(decklist, delimeter);
-
-	for (auto name : cardlist)
-	{
-		auto card = Instance()->Create(name);
-		deck.push_back(card);
+		*(result++) = item;
 	}
 }
 
-vector<std::string> Factory::Split(const string & text, const string & delimeter)
+std::vector<std::string> split(const std::string &data, char delim)
 {
-	std::vector<std::string> tokens;
-	std::size_t start = 0, end = 0;
+	std::vector<std::string> elements;
+	split(data, delim, std::back_inserter(elements));
+	return elements;
+}
 
-	while ((end = text.find(delimeter, start)) != std::string::npos)
+// ReSharper disable CppMemberFunctionMayBeConst
+Card* Factory::GetCard(std::string name)
+// ReSharper restore CppMemberFunctionMayBeConst
+{
+	try
 	{
-		tokens.push_back(text.substr(start, end - start));
-		start = end + 1;
+		std::string pyModule = moduleFolder + "." + name;
+		object derived = import(str(pyModule)).attr(str(name))();
+
+		Card* card = new Card(derived);
+		return card;
+	}
+	catch (...)
+	{
+		PyErr_Print();
 	}
 
-	tokens.push_back(text.substr(start));
+	return nullptr;
+}
 
-	return tokens;
+vector<Card*> Factory::GetDeck(std::string cards)
+{
+	vector<string> items = split(cards, delimeter);
+	vector<Card*> cCards;
+
+	for (auto card : items)
+	{
+		cCards.push_back(GetCard(card));
+	}
+
+	return cCards;
 }
 
 Factory::Factory()
+	: moduleFolder("cards"), delimeter('\n')
 {
+	Py_Initialize();
+}
+
+Factory::~Factory()
+{
+	Py_Finalize();
 }

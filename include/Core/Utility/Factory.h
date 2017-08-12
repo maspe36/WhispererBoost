@@ -1,63 +1,37 @@
 #pragma once
+#include <string>
 #include "../Game/Card.h"
-#include "boost/function.hpp"
-
-#include <map>
-#include <functional>
-
-
-using namespace std;
-
-/* An internal helper class to register a factory function */
-class Registrar {
-public:
-	Registrar(string className, boost::function<Card*()> classFactoryFunction);
-};
-
-/* A preprocessor macro to associate a string to a class type */
-#define REGISTER_CLASS(NAME, TYPE) static Registrar registrar(NAME, [](void) -> Card * { return new TYPE();});
 
 class Factory
 {
 public:
 	#pragma region Instance Vars
 
-	/* Get the single instance of the factory */
-	static Factory * Instance();
+	/* The folder the card scripts are stored in */
+	std::string moduleFolder;
 
-	#pragma endregion 
+	/* Delimeter to split the data string on */
+	char delimeter;
 
-	#pragma region Methods
+	#pragma endregion
 
-	/* Register a factory function to create an instance of className */
-	void RegisterFactoryFunction(string name, boost::function<Card*()> classFactoryFunction);
+	#pragma region Public Methods
 
-	/* Create an instance of a registered class */
-	Card* Create(string name);
+	/* Return a Card* from the name of a python script, requires the python instance the class constructor creates */
+	Card* GetCard(std::string name);
 
-	/* Fill the given vector<Card*> with the instances of the cards in the decklist */
-	static void FillDeck(vector<Card*>& deck, std::string decklist, std::string delimeter);
+	/* Return a vector<Card*> from a vector of python script names, requires the python instance the class constructor creates */
+	vector<Card*> GetDeck(std::string cards);
 
-	#pragma endregion 
+	#pragma endregion
 
-private:
-	#pragma region Methods
+	#pragma region Constructor & Destructor
 
-	static vector<string> Split(const string& str, const string& delim);
-
-	#pragma endregion 
-
-	#pragma region Constructor
-
-	/* Empty constructor for a factory */
+	/* Default constructor */
 	Factory();
 
-	#pragma endregion 
+	/* Default destructor */
+	virtual ~Factory();
 
-	#pragma region Instance Variables
-
-	/* The registry of type constructors */
-	map<string, boost::function<Card*()>> factoryFunctionRegistry;
-
-	#pragma endregion 
+	#pragma endregion
 };
