@@ -25,12 +25,12 @@ project
 # source files after the colon separated by spaces.
 # Declare the three extension modules.  You can specify multiple
 python-extension Action : ../src/Core/Utility/Action.cpp ;
-python-extension Card : ../src/Core/Game/Card.cpp ../src/Core/Utility/Action.cpp ;
-python-extension Client : ../src/Network/Client.cpp ../src/Core/Game/Player.cpp ../src/Core/Game/Game.cpp ;
+python-extension Card : ../src/Core/Game/Card.cpp ../src/Core/Utility/Action.cpp ../src/Core/Utility/Factory.cpp ;
+python-extension Client : ../src/Network/Client.cpp ../src/Core/Game/Player.cpp ../src/Core/Game/Game.cpp ../src/Core/Utility/Factory.cpp ../src/Core/Game/Card.cpp ../src/Core/Utility/Action.cpp ;
 python-extension Constant : ../src/Core/Derived/Constant.cpp ../src/Core/Game/Card.cpp ../src/Core/Utility/Action.cpp ;
-python-extension Creature : ../src/Core/Derived/Creature.cpp ../src/Core/Game/Card.cpp ../src/Core/Game/Player.cpp ../src/Core/Game/Game.cpp ../src/Network/Client.cpp ../src/Core/Utility/Action.cpp ;
-python-extension Game : ../src/Core/Game/Game.cpp ../src/Network/Client.cpp ../src/Core/Game/Player.cpp ;
-python-extension Player : ../src/Core/Game/Player.cpp ../src/Core/Game/Game.cpp ../src/Network/Client.cpp ;
+python-extension Creature : ../src/Core/Derived/Creature.cpp ../src/Core/Game/Card.cpp ../src/Core/Game/Player.cpp ../src/Core/Game/Game.cpp ../src/Network/Client.cpp ../src/Core/Utility/Action.cpp ../src/Core/Utility/Factory.cpp ;
+python-extension Game : ../src/Core/Game/Game.cpp ../src/Network/Client.cpp ../src/Core/Game/Player.cpp ../src/Core/Utility/Factory.cpp ../src/Core/Game/Card.cpp ../src/Core/Utility/Action.cpp ;
+python-extension Player : ../src/Core/Game/Player.cpp ../src/Core/Game/Game.cpp ../src/Network/Client.cpp ../src/Core/Utility/Factory.cpp ../src/Core/Game/Card.cpp ../src/Core/Utility/Action.cpp ;
 python-extension Spell : ../src/Core/Derived/Spell.cpp ../src/Core/Game/Card.cpp ../src/Core/Utility/Action.cpp ;
 
 # Put the extension and Boost.Python DLL in the current directory, so
