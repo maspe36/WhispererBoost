@@ -131,9 +131,7 @@ void Client::DeckReceive(const boost::system::error_code & errorCode)
 
 		std::cout << m_Player->Name << " deck list: " << data << std::endl;
 
-		std::vector<Card*> cards;
-
-		//Factory::FillDeck(cards, data, ",");
+		std::vector<Card*> cards = m_Player->CurrentGame->m_Factory->GetDeck(data);
 
 		m_Player->Deck = cards;
 
