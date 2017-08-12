@@ -8,7 +8,7 @@ public:
 	#pragma region Constructor & Destructor
 
 	/* The constructor for the derived spell class */
-	Spell(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics);
+	Spell(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics, Player* owner);
 
 	/* The virtual destructor for the derived spell class */
 	virtual ~Spell();

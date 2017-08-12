@@ -8,10 +8,10 @@ public:
 	#pragma region Instance Vars
 
 	/* A creatures original Attack */ 
-	int const OriginalAttack;
+	int OriginalAttack;
 
 	/* A creatures original Defense */
-	int const OriginalDefense;
+	int OriginalDefense;
 
 	/* A creatures base attack (From buffs, debuffs, etc) */
 	int BaseAttack;
@@ -55,7 +55,7 @@ public:
 	#pragma region Constructor & Destructor
 
 	/* The constructor for the derived creature class */
-	Creature(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics, int attack, int defense);
+	Creature(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics, Player* owner, int attack, int defense);
 
 	/* The virtual destructor for the derived creature class */
 	virtual ~Creature();

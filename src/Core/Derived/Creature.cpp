@@ -1,5 +1,10 @@
-#include "../../include/Core/Derived/Creature.h"
-#include "../../include/Core/Game/Player.h"
+#define BOOST_PYTHON_STATIC_LIB
+#include "../../../include/Core/Derived/Creature.h"
+#include "../../../include/Core/Game/Player.h"
+
+#include <boost/python.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+
 
 void Creature::Attacking(Creature* creature)
 {
@@ -55,8 +60,8 @@ bool Creature::IsDead() const
 	return false;
 }
 
-Creature::Creature(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics, int attack, int defense)
-	: Card(cost, name, text, color, type, mechanics),
+Creature::Creature(vector<int> cost, string name, string text, ColorVariants color, TypeVariants type, vector<MechanicVariants> mechanics, Player* owner, int attack, int defense)
+	: Card(cost, name, text, color, type, mechanics, owner),
 	  OriginalAttack(attack), OriginalDefense(defense),
 	  BaseAttack(attack), BaseDefense(defense),
 	  Attack(attack), Defense(defense), 
@@ -66,4 +71,37 @@ Creature::Creature(vector<int> cost, string name, string text, ColorVariants col
 
 Creature::~Creature()
 {
+}
+
+BOOST_PYTHON_MODULE(Creature)
+{
+	using namespace boost::python;
+
+	typedef vector<int> vectorInt;
+	typedef vector<Card::MechanicVariants> vectorMecanics;
+
+	class_<vectorInt>("vectorInt")
+		.def(vector_indexing_suite<vectorInt>());
+	class_<vectorMecanics>("vectorMecanics")
+		.def(vector_indexing_suite<vectorMecanics>());
+
+	class_<Creature>("Creature", init<vectorInt, string, string, Card::ColorVariants, Card::TypeVariants, vectorMecanics, Player*, int, int>())
+		.def_readwrite("Cost", &Creature::Cost)
+		.def_readwrite("Name", &Creature::Name)
+		.def_readwrite("Text", &Creature::Text)
+		.def_readwrite("Color", &Creature::Color)
+		.def_readwrite("Type", &Creature::Type)
+		.def_readwrite("Mechanics", &Creature::Mechanics)
+		.def_readwrite("Alive", &Creature::Alive)
+		.def_readwrite("Owner", &Creature::Owner)
+		.def_readwrite("OriginalAttack", &Creature::OriginalAttack)
+		.def_readwrite("OriginalDefense", &Creature::OriginalDefense)
+		.def_readwrite("BaseAttack", &Creature::BaseAttack)
+		.def_readwrite("BaseDefense", &Creature::BaseDefense)
+		.def_readwrite("Attack", &Creature::Attack)
+		.def_readwrite("Defense", &Creature::Defense)
+		.def_readwrite("Stasis", &Creature::Stasis)
+		.def_readwrite("Flurry", &Creature::Flurry)
+		.def_readwrite("OriginalFlurry", &Creature::OriginalFlurry)
+		.def_readwrite("CanAttack", &Creature::CanAttack);
 }
