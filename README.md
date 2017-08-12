@@ -3,6 +3,7 @@ A digital trading card game.
 
 ## Dependencies
 [Boost 1.64](http://www.boost.org/doc/libs/1_64_0/more/getting_started/index.html)
+
 [Python 3.6.2](https://www.python.org/downloads)
 
 ## Building
