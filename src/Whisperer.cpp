@@ -1,9 +1,11 @@
 #include "../include/Core/Game/Game.h"
 #include "../include/Core/Game/Player.h"
 #include "../include/Network/Server.h"
+#include "../include/Core/Utility/Factory.h"
 
 #include <string>
 #include "boost/thread.hpp"
+
 
 int main()
 {
@@ -42,7 +44,8 @@ int main()
 
 				std::cout << "Starting game between " << firstPlayer->Name << " and " << secondPlayer->Name << "..." << std::endl;
 
-				Game* newGame = new Game({ firstPlayer, secondPlayer }, server);
+				Factory* factory = new Factory();
+				Game* newGame = new Game({ firstPlayer, secondPlayer }, server, factory);
 				newGame->Start();
 			}
 		}
