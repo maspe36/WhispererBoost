@@ -22,48 +22,22 @@ use-project boost
 project
   : requirements <library>/boost/python//boost_python ;
 
-# Declare the three extension modules.  You can specify multiple
 # source files after the colon separated by spaces.
-# python-extension Whisperer : ../src/Core/Game/Card.cpp ../src/Core/Game/Game.cpp ../src/Core/Game/Player.cpp ../src/Core/Utility/Action.cpp ../src/Network/Client.cpp ;
+# Declare the three extension modules.  You can specify multiple
+python-extension Action : ../src/Core/Utility/Action.cpp ;
 python-extension Card : ../src/Core/Game/Card.cpp ;
+python-extension Client : ../src/Network/Client.cpp ../src/Core/Game/Player.cpp ../src/Core/Game/Game.cpp ;
+python-extension Constant : ../src/Core/Derived/Constant.cpp ../src/Core/Game/Card.cpp ;
+python-extension Creature : ../src/Core/Derived/Creature.cpp ../src/Core/Game/Card.cpp ../src/Core/Game/Player.cpp ../src/Core/Game/Game.cpp ../src/Network/Client.cpp ;
 python-extension Game : ../src/Core/Game/Game.cpp ../src/Network/Client.cpp ../src/Core/Game/Player.cpp ;
 python-extension Player : ../src/Core/Game/Player.cpp ../src/Core/Game/Game.cpp ../src/Network/Client.cpp ;
-python-extension Action : ../src/Core/Utility/Action.cpp ;
-python-extension Client : ../src/Network/Client.cpp ../src/Core/Game/Player.cpp ../src/Core/Game/Game.cpp ;
+python-extension Spell : ../src/Core/Derived/Spell.cpp ../src/Core/Game/Card.cpp ;
 
 # Put the extension and Boost.Python DLL in the current directory, so
 # that running script by hand works.
 install convenient_copy 
-  : Card 
+  : Action Card Client Constant Creature Game Player Spell
   : <install-dependencies>on <install-type>SHARED_LIB <install-type>PYTHON_EXTENSION 
-	<location>. 
-	<address-model>64
-;
-
-install convenient_copy 
-  : Game 
-  : <install-dependencies>on <install-type>SHARED_LIB <install-type>PYTHON_EXTENSION 
-	<location>. 
-	<address-model>64
-;
-
-install convenient_copy 
-  : Player 
-  : <install-dependencies>on <install-type>SHARED_LIB <install-type>PYTHON_EXTENSION 
-	<location>. 
-	<address-model>64
-;
-
-install convenient_copy 
-  : Action 
-  : <install-dependencies>on <install-type>SHARED_LIB <install-type>PYTHON_EXTENSION 
-	<location>. 
-	<address-model>64
-;
-
-install convenient_copy 
-  : Client 
-  : <install-dependencies>on <install-type>SHARED_LIB <install-type>PYTHON_EXTENSION 
-	<location>. 
+	<location>./GameLibrary 
 	<address-model>64
 ;
