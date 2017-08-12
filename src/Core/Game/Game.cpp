@@ -6,6 +6,7 @@
 #include "../../../include/Core/Derived/Constant.h"
 #include "../../../include/Core/Derived/Spell.h"
 #include "../../../include/Core/Utility/Action.h"
+#include "../../../include/Core/Utility/Factory.h"
 #include "../../../include/Network/Server.h"
 
 #include <thread>
@@ -331,8 +332,8 @@ bool Game::IsGameOver()
 	return false;
 }
 
-Game::Game(vector<Player*> players, Server* server)
-	: PLAYER_HEALTH(30), PLAYER_MANA({1,1,1,1,1,1}), Players(players), ActivePlayer(players.at(0)), ActiveIndex(0), m_Server(server)
+Game::Game(vector<Player*> players, Server* server, Factory* factory)
+	: PLAYER_HEALTH(30), PLAYER_MANA({1,1,1,1,1,1}), Players(players), ActivePlayer(players.at(0)), ActiveIndex(0), m_Server(server), m_Factory(factory)
 {
 	cout << "Game created, initializing game settings..." << endl;
 

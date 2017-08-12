@@ -7,6 +7,7 @@ class Player;
 class Action;
 class Card;
 class Server;
+class Factory;
 
 class Game
 {
@@ -52,6 +53,8 @@ public:
 
 	/* The server this game is from */
 	Server* m_Server;
+
+	Factory* m_Factory;
 
 	#pragma endregion
 
@@ -107,7 +110,7 @@ public:
 	#pragma region Constructors & Destructor
 
 	/* Create a new game and set all players health and mana to the game settings */
-	explicit Game(vector<Player*> players, Server* server);
+	explicit Game(vector<Player*> players, Server* server, Factory* factory);
 
 	/* Deconstructor for a game */
 	~Game();
